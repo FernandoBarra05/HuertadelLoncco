@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Huerta del Loncco — Picantería arequipeña en Yanahuara, Arequipa</title>
+<meta name="description" content="Picantería arequipeña y cocina de autor en Yanahuara, Arequipa. Platos de las 8 provincias, coctelería de autor y arpa en vivo. Reservas y pedidos directos.">
+<meta property="og:title" content="La Huerta del Loncco — El alma de Arequipa en cada bocado">
+<meta property="og:description" content="Picantería arequipeña y cocina de autor en Calle La Recoleta 220, Yanahuara, Arequipa.">
+<meta property="og:image" content="img/chupe-de-camaron.jpg">
+<link rel="icon" type="image/png" href="img/logo-verde.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&amp;family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,500&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+html{scroll-behavior:smooth}
+a{color:#475a29}a:hover{color:#3d792f}
+:focus-visible{outline:2px solid #475a29;outline-offset:2px}
+.osc :focus-visible{outline-color:#bcc785}
+button{font:inherit;cursor:pointer}
+input{font:inherit}
+.dos-col{background-image:linear-gradient(#475a29,#475a29);background-size:1px 100%;background-position:center top;background-repeat:no-repeat}
+@keyframes bandIn{from{transform:translateX(64px);opacity:0}to{transform:none;opacity:1}}
+.bandIn{animation:bandIn .8s cubic-bezier(.2,.7,.2,1) both}
+.band-link{transition:padding-left .25s ease}
+.band-link:hover{padding-left:48px !important}
+.prov{transition:fill .2s ease,transform .25s ease}.prov:hover{fill:#f7f2e9}
+.placa:hover{background:#d69a5e !important}
+@media (prefers-reduced-motion:reduce){.bandIn{animation:none}.band-link,.prov{transition:none}html{scroll-behavior:auto}}
+@media (max-width:760px){.dos-col{background-image:none;grid-template-columns:minmax(0,1fr) !important}.h1{font-size:52px !important}.band-title{font-size:30px !important}}
+</style>
+<style>#app.listo .bandIn{animation:none}</style>
+</head>
+<body>
+<div id="app"></div>
+<template id="plantilla">
+<div id="top" style="font-family: Roboto, 'Helvetica Neue', Arial, sans-serif; color: #1d1d1b; background: #ffffff; min-height: 100vh; overflow-x: hidden">
+
+<!-- ================= PORTADA: el índice de la carta ================= -->
+<header class="osc" style="position: relative; isolation: isolate; overflow: hidden; background: #152808; color: #e9edd9">
+<img src="img/grabado-claro.png" alt="" aria-hidden="true" style="position: absolute; z-index: -1; left: -40px; bottom: -30px; width: min(1100px, 90%); opacity: 0.13; pointer-events: none">
+<div style="padding: 20px clamp(24px, 5vw, 72px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px">
+<a href="#top" style="text-decoration: none; display: flex; align-items: center"><img src="img/logo-blanco.png" alt="La Huerta del Loncco, inicio" style="width: 92px; height: auto; display: block"></a>
+<nav aria-label="{{t.navLabel}}" style="display: flex; flex-wrap: wrap; gap: 0 28px; font-size: 15px">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+<a href="{{n.href}}" style="color: #e9edd9; text-decoration: none; padding: 12px 0">{{n.label}}</a>
+</sc-for>
+</nav>
+<div style="display: flex; align-items: center; gap: 10px">
+<div role="group" aria-label="Idioma / Language" style="display: flex; border: 1px solid #4a6233; border-radius: 8px; overflow: hidden">
+<sc-for list="{{langs}}" as="l" hint-placeholder-count="2">
+<sc-if value="{{l.on}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" lang="{{l.code}}" onClick="{{l.pick}}" style="min-width: 76px; min-height: 44px; border: 0; background: #bcc785; color: #152808; font-size: 14px; font-weight: 500">{{l.label}}</button>
+</sc-if>
+<sc-if value="{{l.off}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-pressed="false" lang="{{l.code}}" onClick="{{l.pick}}" style="min-width: 76px; min-height: 44px; border: 0; background: transparent; color: #e9edd9; font-size: 14px">{{l.label}}</button>
+</sc-if>
+</sc-for>
+</div>
+<a href="#pedidos" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border: 1px solid #4a6233; border-radius: 8px; color: #e9edd9; text-decoration: none; font-size: 14px">{{cartLabel}}</a>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; align-items: stretch">
+<div style="flex: 1 1 460px; min-width: 0; padding: 72px clamp(24px, 5vw, 72px) 88px; display: flex; flex-direction: column; justify-content: center; gap: 28px; box-sizing: border-box">
+<h1 class="h1" style="margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 84px; line-height: 0.95; font-weight: 600; color: #e9edd9; max-width: 9.5em; text-wrap: balance">{{t.heroTitle}}</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.65; font-weight: 300; max-width: 30em; text-wrap: pretty">{{t.heroText}}</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="#reservas" style="display: inline-flex; align-items: center; min-height: 56px; padding: 0 30px; background: #bcc785; color: #152808; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 16px">{{t.reserveBtn}}</a>
+<a href="#pedidos" style="display: inline-flex; align-items: center; min-height: 56px; padding: 0 26px; border: 1px solid #bcc785; color: #e9edd9; border-radius: 8px; text-decoration: none; font-size: 16px">{{t.orderBtn}}</a>
+</div>
+<p style="margin: 0; font-size: 14px; line-height: 1.6; font-weight: 300; color: #bcc785; max-width: 30em">{{t.press}}</p>
+</div>
+
+<nav aria-label="{{t.indexLabel}}" style="flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 48px 0">
+<sc-for list="{{heroBands}}" as="b" hint-placeholder-count="4">
+<a class="bandIn band-link" href="#carta" onClick="{{b.pick}}" style="{{b.style}}">
+<span class="band-title" style="font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 44px; line-height: 1; font-weight: 700; letter-spacing: 0.04em">{{b.label}}</span>
+<span style="font-size: 15px; font-weight: 300; font-style: italic">{{b.hint}}</span>
+</a>
+</sc-for>
+</nav>
+</div>
+</header>
+
+<!-- ================= NOSOTROS ================= -->
+<section id="nosotros" aria-labelledby="h-nos" style="position: relative; isolation: isolate; max-width: 1200px; margin: 0 auto; padding: 120px 24px 96px; display: flex; flex-wrap: wrap; gap: 72px; align-items: center">
+<img class="deco" src="img/grabado-gris.png" alt="" aria-hidden="true" style="position: absolute; z-index: -1; right: -120px; top: 20px; width: 640px; opacity: 0.4; pointer-events: none">
+<div style="flex: 1 1 340px; display: flex; justify-content: center">
+<div style="width: 100%; max-width: 400px; aspect-ratio: 4 / 5; border-radius: 999px 999px 0 0; background: #e9edd9; display: flex; align-items: center; justify-content: center; overflow: hidden">
+<img src="img/chupe-de-camaron.jpg" alt="{{t.chupeAlt}}" style="width: 100%; height: 100%; object-fit: cover; display: block">
+</div>
+</div>
+<div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<h2 id="h-nos" style="margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 56px; line-height: 1; font-weight: 700; color: #475a29; text-wrap: balance">{{t.aboutTitle}}</h2>
+<p style="margin: 0; font-size: 18px; line-height: 1.8; font-weight: 300; max-width: 36em; text-wrap: pretty">{{t.about1}}</p>
+<p style="margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 26px; line-height: 1.3; font-style: italic; font-weight: 600; color: #475a29">{{t.about2}}</p>
+</div>
+</section>
+
+
+<!-- ================= MAPA DE PROVINCIAS ================= -->
+<section id="provincias" aria-labelledby="h-prov" class="osc" style="background: #152808; color: #e9edd9; padding: 104px 24px 112px">
+<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 12px; max-width: 40em">
+<h2 id="h-prov" style="margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 60px; line-height: 0.98; font-weight: 700; color: #e9edd9; text-wrap: balance">{{t.mapTitle}}</h2>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; font-weight: 300">{{t.mapSub}}</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: center">
+<div style="flex: 999 1 620px; min-width: 0">
+<div style="position: relative; width: 100%; aspect-ratio: 1370 / 1000">
+<svg role="img" aria-label="{{t.mapAlt}}" viewBox="40 80 1370 1000" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible">
+<defs>
+<filter id="hdl-grano" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="4" result="n"></feTurbulence><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.42  0 0 0 0 0.38  0 0 0 0 0.31  0 0 0 0.28 0" result="g"></feColorMatrix><feComposite in="g" in2="SourceGraphic" operator="in" result="gi"></feComposite><feMerge><feMergeNode in="SourceGraphic"></feMergeNode><feMergeNode in="gi"></feMergeNode></feMerge></filter>
+<filter id="hdl-sombra" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="22" stdDeviation="18" flood-color="#000000" flood-opacity="0.45"></feDropShadow></filter>
+</defs>
+<g filter="url(#hdl-sombra)" fill="#a99d86" stroke="#a99d86" stroke-width="6" stroke-linejoin="round" transform="translate(0,16)" aria-hidden="true">
+<path d="M600 320 L588 319 L579 313 L570 307 L560 299 L550 304 L540 304 L530 301 L520 296 L510 298 L500 300 L490 297 L480 293 L469 291 L460 299 L450 300 L440 300 L429 298 L422 306 L417 314 L411 321 L401 325 L396 332 L393 341 L388 350 L382 356 L373 361 L370 370 L363 363 L355 356 L354 344 L348 336 L340 329 L331 336 L320 337 L308 337 L299 345 L294 338 L288 331 L286 322 L282 314 L274 308 L269 301 L264 293 L264 281 L256 275 L249 268 L241 262 L241 251 L236 243 L230 233 L219 238 L210 231 L200 227 L191 224 L180 228 L170 225 L160 220 L149 220 L140 226 L131 231 L120 229 L108 231 L103 239 L101 250 L92 255 L84 260 L75 267 L79 279 L74 290 L70 300 L68 311 L78 317 L80 327 L84 335 L81 348 L91 354 L98 362 L106 369 L107 383 L116 387 L124 393 L134 396 L136 408 L142 415 L148 423 L160 423 L166 431 L173 437 L178 446 L191 445 L198 451 L206 456 L209 468 L220 471 L228 475 L238 477 L243 487 L251 491 L259 496 L271 496 L277 504 L283 511 L290 519 L300 519 L310 523 L318 528 L325 537 L336 538 L345 540 L355 543 L361 554 L371 556 L380 560 L390 563 L392 575 L398 582 L404 589 L416 591 L422 598 L427 607 L431 615 L440 620 L449 623 L455 630 L462 636 L468 643 L479 643 L486 648 L494 653 L498 665 L508 666 L517 669 L528 668 L534 678 L543 682 L551 687 L560 690 L563 681 L564 672 L563 662 L568 654 L570 645 L575 637 L573 627 L576 618 L577 609 L582 600 L582 591 L584 582 L586 573 L591 565 L595 557 L595 548 L596 538 L600 530 L604 521 L603 512 L602 503 L601 494 L606 485 L607 476 L609 467 L606 458 L608 449 L610 440 L615 431 L613 420 L616 410 L619 400 L625 391 L624 380 L621 372 L616 364 L617 353 L612 345 L608 337 L601 330 L600 320Z"></path>
+<path d="M915 160 L910 170 L901 174 L898 165 L891 158 L883 151 L882 141 L881 131 L878 122 L870 116 L860 114 L850 108 L841 104 L830 104 L821 112 L809 111 L799 114 L789 118 L782 128 L769 126 L759 129 L749 134 L741 142 L732 145 L723 147 L714 150 L708 159 L699 163 L691 165 L682 172 L684 182 L683 191 L685 202 L674 208 L671 218 L666 226 L668 238 L659 245 L654 253 L648 261 L651 273 L645 281 L640 290 L629 292 L625 304 L618 310 L610 316 L600 320 L606 327 L609 336 L617 342 L624 348 L630 354 L634 363 L640 372 L650 368 L660 365 L670 365 L680 365 L690 363 L699 359 L708 355 L717 352 L727 349 L734 342 L742 337 L751 333 L761 332 L769 327 L777 321 L785 316 L795 314 L804 310 L811 304 L818 298 L825 292 L834 288 L841 281 L847 273 L852 265 L861 261 L867 254 L874 248 L880 240 L883 229 L891 220 L896 211 L897 199 L903 190 L907 180 L913 171 L915 160Z"></path>
+<path d="M600 320 L601 330 L608 337 L612 345 L617 353 L616 364 L621 372 L624 380 L625 391 L619 400 L616 410 L613 420 L615 431 L610 440 L608 449 L606 458 L609 467 L607 476 L606 485 L601 494 L602 503 L603 512 L604 521 L600 530 L609 534 L616 542 L624 546 L634 550 L643 553 L650 560 L659 563 L667 567 L677 566 L685 570 L694 572 L702 578 L712 577 L721 579 L729 584 L735 594 L743 599 L752 605 L760 610 L765 602 L770 594 L776 588 L784 582 L791 576 L794 567 L799 559 L804 551 L812 544 L815 535 L819 526 L823 517 L831 511 L826 502 L822 494 L813 489 L809 480 L805 473 L802 463 L795 458 L789 450 L790 440 L796 430 L796 420 L796 410 L796 400 L801 390 L805 381 L810 373 L812 362 L820 355 L826 347 L831 338 L833 327 L840 320 L845 312 L851 303 L852 293 L857 284 L862 276 L869 268 L871 258 L874 248 L880 240 L874 248 L867 254 L861 261 L852 265 L847 273 L841 281 L834 288 L825 292 L818 298 L811 304 L804 310 L795 314 L785 316 L777 321 L769 327 L761 332 L751 333 L742 337 L734 342 L727 349 L717 352 L708 355 L699 359 L690 363 L680 365 L670 365 L660 365 L650 368 L640 372 L634 363 L630 354 L624 348 L617 342 L609 336 L606 327 L600 320Z"></path>
+<path d="M915 160 L913 171 L907 180 L903 190 L897 199 L896 211 L891 220 L883 229 L880 240 L874 248 L871 258 L869 268 L862 276 L857 284 L852 293 L851 303 L845 312 L840 320 L833 327 L831 338 L826 347 L820 355 L812 362 L810 373 L805 381 L801 390 L796 400 L796 410 L796 420 L796 430 L790 440 L789 450 L795 458 L802 463 L805 473 L809 480 L813 489 L822 494 L826 502 L831 511 L823 517 L819 526 L815 535 L812 544 L804 551 L799 559 L794 567 L791 576 L784 582 L776 588 L770 594 L765 602 L760 610 L764 618 L764 628 L767 636 L769 645 L775 653 L775 662 L778 671 L779 683 L790 684 L800 688 L810 691 L819 699 L830 701 L840 699 L850 699 L860 701 L870 701 L880 698 L890 700 L896 692 L900 683 L904 675 L904 664 L911 657 L916 649 L922 641 L923 631 L928 623 L932 614 L940 607 L942 597 L945 588 L950 580 L944 572 L941 563 L939 554 L934 545 L927 538 L924 529 L921 520 L924 510 L925 500 L926 490 L930 481 L939 477 L947 472 L955 465 L964 462 L973 460 L982 456 L990 450 L990 440 L993 430 L997 420 L996 410 L996 400 L997 390 L1002 380 L1001 370 L1002 360 L1001 350 L1007 340 L1007 330 L1008 320 L1006 310 L1011 300 L1013 291 L1016 282 L1013 272 L1016 263 L1018 254 L1023 246 L1022 236 L1024 227 L1025 218 L1030 209 L1032 200 L1032 190 L1031 179 L1036 170 L1039 160 L1040 150 L1042 139 L1035 129 L1040 118 L1033 107 L1023 100 L1016 110 L1009 119 L1000 124 L994 134 L986 138 L978 143 L966 141 L960 150 L951 153 L943 160 L933 154 L924 156 L915 160Z"></path>
+<path d="M950 580 L959 583 L966 592 L975 595 L984 599 L993 603 L1001 612 L1008 606 L1016 602 L1021 593 L1029 589 L1037 585 L1046 582 L1053 575 L1059 569 L1070 565 L1081 563 L1090 555 L1100 550 L1109 549 L1118 553 L1127 551 L1136 550 L1145 547 L1155 550 L1164 552 L1173 552 L1182 549 L1191 547 L1200 550 L1210 552 L1220 553 L1230 552 L1240 554 L1250 558 L1260 559 L1270 558 L1280 558 L1289 559 L1298 558 L1307 554 L1316 550 L1325 548 L1334 550 L1343 548 L1352 545 L1360 539 L1370 540 L1363 533 L1355 526 L1354 514 L1347 507 L1339 500 L1333 491 L1335 480 L1335 469 L1329 460 L1327 450 L1329 440 L1335 430 L1333 420 L1331 410 L1329 401 L1334 389 L1329 379 L1326 370 L1318 361 L1323 348 L1316 341 L1312 332 L1300 328 L1299 317 L1295 308 L1294 299 L1285 291 L1286 280 L1285 270 L1289 259 L1282 251 L1271 248 L1261 244 L1252 237 L1241 237 L1230 236 L1223 229 L1216 222 L1208 217 L1197 217 L1192 213 L1182 215 L1172 217 L1165 224 L1158 232 L1149 236 L1142 238 L1136 231 L1125 228 L1118 222 L1112 215 L1109 204 L1101 200 L1094 192 L1087 186 L1088 174 L1082 167 L1076 159 L1070 158 L1060 152 L1050 150 L1040 150 L1039 160 L1036 170 L1031 179 L1032 190 L1032 200 L1030 209 L1025 218 L1024 227 L1022 236 L1023 246 L1018 254 L1016 263 L1013 272 L1016 282 L1013 291 L1011 300 L1006 310 L1008 320 L1007 330 L1007 340 L1001 350 L1002 360 L1001 370 L1002 380 L997 390 L996 400 L996 410 L997 420 L993 430 L990 440 L990 450 L982 456 L973 460 L964 462 L955 465 L947 472 L939 477 L930 481 L926 490 L925 500 L924 510 L921 520 L924 529 L927 538 L934 545 L939 554 L941 563 L944 572 L950 580Z"></path>
+<path d="M600 530 L596 538 L595 548 L595 557 L591 565 L586 573 L584 582 L582 591 L582 600 L577 609 L576 618 L573 627 L575 637 L570 645 L568 654 L563 662 L564 672 L563 681 L560 690 L565 700 L576 702 L585 707 L592 713 L598 724 L608 725 L617 727 L626 731 L631 740 L638 747 L647 750 L657 752 L665 756 L671 765 L680 769 L689 771 L699 770 L705 780 L714 784 L721 789 L733 785 L741 790 L750 794 L755 804 L766 804 L775 808 L784 811 L789 822 L798 823 L806 830 L816 833 L819 844 L824 852 L829 860 L840 863 L845 872 L849 881 L854 891 L866 894 L873 902 L880 910 L880 900 L877 890 L879 880 L881 870 L884 860 L881 849 L886 840 L888 830 L890 820 L892 810 L893 800 L892 790 L897 780 L900 770 L900 760 L896 750 L896 740 L897 730 L894 720 L891 710 L890 700 L880 698 L870 701 L860 701 L850 699 L840 699 L830 701 L819 699 L810 691 L800 688 L790 684 L779 683 L778 671 L775 662 L775 653 L769 645 L767 636 L764 628 L764 618 L760 610 L752 605 L743 599 L735 594 L729 584 L721 579 L712 577 L702 578 L694 572 L685 570 L677 566 L667 567 L659 563 L650 560 L643 553 L634 550 L624 546 L616 542 L609 534 L600 530Z"></path>
+<path d="M950 580 L945 588 L942 597 L940 607 L932 614 L928 623 L923 631 L922 641 L916 649 L911 657 L904 664 L904 675 L900 683 L896 692 L890 700 L891 710 L894 720 L897 730 L896 740 L896 750 L900 760 L900 770 L897 780 L892 790 L893 800 L892 810 L890 820 L899 818 L907 814 L915 809 L925 809 L933 807 L942 805 L949 798 L960 795 L970 792 L981 790 L990 783 L1000 778 L1010 782 L1020 785 L1030 785 L1040 784 L1050 788 L1060 791 L1070 791 L1080 787 L1090 790 L1100 790 L1110 793 L1120 789 L1130 790 L1139 784 L1150 785 L1160 783 L1171 784 L1178 774 L1187 773 L1196 772 L1207 775 L1215 771 L1223 765 L1232 762 L1241 762 L1251 763 L1260 755 L1268 748 L1280 748 L1290 745 L1301 741 L1305 731 L1315 730 L1323 726 L1332 723 L1337 715 L1343 706 L1352 704 L1361 700 L1368 693 L1365 682 L1368 674 L1369 664 L1379 658 L1379 649 L1383 640 L1377 630 L1384 620 L1383 610 L1384 600 L1376 590 L1381 580 L1379 570 L1379 559 L1368 551 L1370 540 L1360 539 L1352 545 L1343 548 L1334 550 L1325 548 L1316 550 L1307 554 L1298 558 L1289 559 L1280 558 L1270 558 L1260 559 L1250 558 L1240 554 L1230 552 L1220 553 L1210 552 L1200 550 L1191 547 L1182 549 L1173 552 L1164 552 L1155 550 L1145 547 L1136 550 L1127 551 L1118 553 L1109 549 L1100 550 L1090 555 L1081 563 L1070 565 L1059 569 L1053 575 L1046 582 L1037 585 L1029 589 L1021 593 L1016 602 L1008 606 L1001 612 L993 603 L984 599 L975 595 L966 592 L959 583 L950 580Z"></path>
+<path d="M890 820 L888 830 L886 840 L881 849 L884 860 L881 870 L879 880 L877 890 L880 900 L880 910 L887 918 L897 919 L907 921 L914 928 L920 937 L929 942 L939 941 L948 944 L956 948 L964 955 L974 953 L983 955 L993 955 L998 965 L1006 970 L1012 976 L1025 977 L1029 986 L1036 993 L1040 1002 L1052 1003 L1056 1012 L1061 1020 L1062 1030 L1068 1036 L1077 1041 L1078 1048 L1086 1043 L1097 1041 L1100 1032 L1105 1024 L1107 1015 L1119 1011 L1123 1002 L1130 995 L1130 983 L1140 978 L1146 971 L1155 964 L1152 952 L1156 944 L1160 936 L1169 930 L1170 920 L1169 910 L1167 900 L1175 890 L1174 880 L1173 870 L1168 861 L1170 851 L1167 843 L1165 834 L1156 827 L1154 818 L1154 808 L1152 797 L1140 794 L1130 790 L1120 789 L1110 793 L1100 790 L1090 790 L1080 787 L1070 791 L1060 791 L1050 788 L1040 784 L1030 785 L1020 785 L1010 782 L1000 778 L990 783 L981 790 L970 792 L960 795 L949 798 L942 805 L933 807 L925 809 L915 809 L907 814 L899 818 L890 820Z"></path>
+</g>
+<g filter="url(#hdl-grano)" stroke="#bdb19c" stroke-width="5" stroke-linejoin="round" style="cursor: pointer">
+<path class="prov" d="M600 320 L588 319 L579 313 L570 307 L560 299 L550 304 L540 304 L530 301 L520 296 L510 298 L500 300 L490 297 L480 293 L469 291 L460 299 L450 300 L440 300 L429 298 L422 306 L417 314 L411 321 L401 325 L396 332 L393 341 L388 350 L382 356 L373 361 L370 370 L363 363 L355 356 L354 344 L348 336 L340 329 L331 336 L320 337 L308 337 L299 345 L294 338 L288 331 L286 322 L282 314 L274 308 L269 301 L264 293 L264 281 L256 275 L249 268 L241 262 L241 251 L236 243 L230 233 L219 238 L210 231 L200 227 L191 224 L180 228 L170 225 L160 220 L149 220 L140 226 L131 231 L120 229 L108 231 L103 239 L101 250 L92 255 L84 260 L75 267 L79 279 L74 290 L70 300 L68 311 L78 317 L80 327 L84 335 L81 348 L91 354 L98 362 L106 369 L107 383 L116 387 L124 393 L134 396 L136 408 L142 415 L148 423 L160 423 L166 431 L173 437 L178 446 L191 445 L198 451 L206 456 L209 468 L220 471 L228 475 L238 477 L243 487 L251 491 L259 496 L271 496 L277 504 L283 511 L290 519 L300 519 L310 523 L318 528 L325 537 L336 538 L345 540 L355 543 L361 554 L371 556 L380 560 L390 563 L392 575 L398 582 L404 589 L416 591 L422 598 L427 607 L431 615 L440 620 L449 623 L455 630 L462 636 L468 643 L479 643 L486 648 L494 653 L498 665 L508 666 L517 669 L528 668 L534 678 L543 682 L551 687 L560 690 L563 681 L564 672 L563 662 L568 654 L570 645 L575 637 L573 627 L576 618 L577 609 L582 600 L582 591 L584 582 L586 573 L591 565 L595 557 L595 548 L596 538 L600 530 L604 521 L603 512 L602 503 L601 494 L606 485 L607 476 L609 467 L606 458 L608 449 L610 440 L615 431 L613 420 L616 410 L619 400 L625 391 L624 380 L621 372 L616 364 L617 353 L612 345 L608 337 L601 330 L600 320Z" fill="{{mp.caraveli.fill}}" transform="{{mp.caraveli.tr}}" onClick="{{mp.caraveli.pick}}"></path>
+<path class="prov" d="M915 160 L910 170 L901 174 L898 165 L891 158 L883 151 L882 141 L881 131 L878 122 L870 116 L860 114 L850 108 L841 104 L830 104 L821 112 L809 111 L799 114 L789 118 L782 128 L769 126 L759 129 L749 134 L741 142 L732 145 L723 147 L714 150 L708 159 L699 163 L691 165 L682 172 L684 182 L683 191 L685 202 L674 208 L671 218 L666 226 L668 238 L659 245 L654 253 L648 261 L651 273 L645 281 L640 290 L629 292 L625 304 L618 310 L610 316 L600 320 L606 327 L609 336 L617 342 L624 348 L630 354 L634 363 L640 372 L650 368 L660 365 L670 365 L680 365 L690 363 L699 359 L708 355 L717 352 L727 349 L734 342 L742 337 L751 333 L761 332 L769 327 L777 321 L785 316 L795 314 L804 310 L811 304 L818 298 L825 292 L834 288 L841 281 L847 273 L852 265 L861 261 L867 254 L874 248 L880 240 L883 229 L891 220 L896 211 L897 199 L903 190 L907 180 L913 171 L915 160Z" fill="{{mp.launion.fill}}" transform="{{mp.launion.tr}}" onClick="{{mp.launion.pick}}"></path>
+<path class="prov" d="M600 320 L601 330 L608 337 L612 345 L617 353 L616 364 L621 372 L624 380 L625 391 L619 400 L616 410 L613 420 L615 431 L610 440 L608 449 L606 458 L609 467 L607 476 L606 485 L601 494 L602 503 L603 512 L604 521 L600 530 L609 534 L616 542 L624 546 L634 550 L643 553 L650 560 L659 563 L667 567 L677 566 L685 570 L694 572 L702 578 L712 577 L721 579 L729 584 L735 594 L743 599 L752 605 L760 610 L765 602 L770 594 L776 588 L784 582 L791 576 L794 567 L799 559 L804 551 L812 544 L815 535 L819 526 L823 517 L831 511 L826 502 L822 494 L813 489 L809 480 L805 473 L802 463 L795 458 L789 450 L790 440 L796 430 L796 420 L796 410 L796 400 L801 390 L805 381 L810 373 L812 362 L820 355 L826 347 L831 338 L833 327 L840 320 L845 312 L851 303 L852 293 L857 284 L862 276 L869 268 L871 258 L874 248 L880 240 L874 248 L867 254 L861 261 L852 265 L847 273 L841 281 L834 288 L825 292 L818 298 L811 304 L804 310 L795 314 L785 316 L777 321 L769 327 L761 332 L751 333 L742 337 L734 342 L727 349 L717 352 L708 355 L699 359 L690 363 L680 365 L670 365 L660 365 L650 368 L640 372 L634 363 L630 354 L624 348 L617 342 L609 336 L606 327 L600 320Z" fill="{{mp.condesuyos.fill}}" transform="{{mp.condesuyos.tr}}" onClick="{{mp.condesuyos.pick}}"></path>
+<path class="prov" d="M915 160 L913 171 L907 180 L903 190 L897 199 L896 211 L891 220 L883 229 L880 240 L874 248 L871 258 L869 268 L862 276 L857 284 L852 293 L851 303 L845 312 L840 320 L833 327 L831 338 L826 347 L820 355 L812 362 L810 373 L805 381 L801 390 L796 400 L796 410 L796 420 L796 430 L790 440 L789 450 L795 458 L802 463 L805 473 L809 480 L813 489 L822 494 L826 502 L831 511 L823 517 L819 526 L815 535 L812 544 L804 551 L799 559 L794 567 L791 576 L784 582 L776 588 L770 594 L765 602 L760 610 L764 618 L764 628 L767 636 L769 645 L775 653 L775 662 L778 671 L779 683 L790 684 L800 688 L810 691 L819 699 L830 701 L840 699 L850 699 L860 701 L870 701 L880 698 L890 700 L896 692 L900 683 L904 675 L904 664 L911 657 L916 649 L922 641 L923 631 L928 623 L932 614 L940 607 L942 597 L945 588 L950 580 L944 572 L941 563 L939 554 L934 545 L927 538 L924 529 L921 520 L924 510 L925 500 L926 490 L930 481 L939 477 L947 472 L955 465 L964 462 L973 460 L982 456 L990 450 L990 440 L993 430 L997 420 L996 410 L996 400 L997 390 L1002 380 L1001 370 L1002 360 L1001 350 L1007 340 L1007 330 L1008 320 L1006 310 L1011 300 L1013 291 L1016 282 L1013 272 L1016 263 L1018 254 L1023 246 L1022 236 L1024 227 L1025 218 L1030 209 L1032 200 L1032 190 L1031 179 L1036 170 L1039 160 L1040 150 L1042 139 L1035 129 L1040 118 L1033 107 L1023 100 L1016 110 L1009 119 L1000 124 L994 134 L986 138 L978 143 L966 141 L960 150 L951 153 L943 160 L933 154 L924 156 L915 160Z" fill="{{mp.castilla.fill}}" transform="{{mp.castilla.tr}}" onClick="{{mp.castilla.pick}}"></path>
+<path class="prov" d="M950 580 L959 583 L966 592 L975 595 L984 599 L993 603 L1001 612 L1008 606 L1016 602 L1021 593 L1029 589 L1037 585 L1046 582 L1053 575 L1059 569 L1070 565 L1081 563 L1090 555 L1100 550 L1109 549 L1118 553 L1127 551 L1136 550 L1145 547 L1155 550 L1164 552 L1173 552 L1182 549 L1191 547 L1200 550 L1210 552 L1220 553 L1230 552 L1240 554 L1250 558 L1260 559 L1270 558 L1280 558 L1289 559 L1298 558 L1307 554 L1316 550 L1325 548 L1334 550 L1343 548 L1352 545 L1360 539 L1370 540 L1363 533 L1355 526 L1354 514 L1347 507 L1339 500 L1333 491 L1335 480 L1335 469 L1329 460 L1327 450 L1329 440 L1335 430 L1333 420 L1331 410 L1329 401 L1334 389 L1329 379 L1326 370 L1318 361 L1323 348 L1316 341 L1312 332 L1300 328 L1299 317 L1295 308 L1294 299 L1285 291 L1286 280 L1285 270 L1289 259 L1282 251 L1271 248 L1261 244 L1252 237 L1241 237 L1230 236 L1223 229 L1216 222 L1208 217 L1197 217 L1192 213 L1182 215 L1172 217 L1165 224 L1158 232 L1149 236 L1142 238 L1136 231 L1125 228 L1118 222 L1112 215 L1109 204 L1101 200 L1094 192 L1087 186 L1088 174 L1082 167 L1076 159 L1070 158 L1060 152 L1050 150 L1040 150 L1039 160 L1036 170 L1031 179 L1032 190 L1032 200 L1030 209 L1025 218 L1024 227 L1022 236 L1023 246 L1018 254 L1016 263 L1013 272 L1016 282 L1013 291 L1011 300 L1006 310 L1008 320 L1007 330 L1007 340 L1001 350 L1002 360 L1001 370 L1002 380 L997 390 L996 400 L996 410 L997 420 L993 430 L990 440 L990 450 L982 456 L973 460 L964 462 L955 465 L947 472 L939 477 L930 481 L926 490 L925 500 L924 510 L921 520 L924 529 L927 538 L934 545 L939 554 L941 563 L944 572 L950 580Z" fill="{{mp.caylloma.fill}}" transform="{{mp.caylloma.tr}}" onClick="{{mp.caylloma.pick}}"></path>
+<path class="prov" d="M600 530 L596 538 L595 548 L595 557 L591 565 L586 573 L584 582 L582 591 L582 600 L577 609 L576 618 L573 627 L575 637 L570 645 L568 654 L563 662 L564 672 L563 681 L560 690 L565 700 L576 702 L585 707 L592 713 L598 724 L608 725 L617 727 L626 731 L631 740 L638 747 L647 750 L657 752 L665 756 L671 765 L680 769 L689 771 L699 770 L705 780 L714 784 L721 789 L733 785 L741 790 L750 794 L755 804 L766 804 L775 808 L784 811 L789 822 L798 823 L806 830 L816 833 L819 844 L824 852 L829 860 L840 863 L845 872 L849 881 L854 891 L866 894 L873 902 L880 910 L880 900 L877 890 L879 880 L881 870 L884 860 L881 849 L886 840 L888 830 L890 820 L892 810 L893 800 L892 790 L897 780 L900 770 L900 760 L896 750 L896 740 L897 730 L894 720 L891 710 L890 700 L880 698 L870 701 L860 701 L850 699 L840 699 L830 701 L819 699 L810 691 L800 688 L790 684 L779 683 L778 671 L775 662 L775 653 L769 645 L767 636 L764 628 L764 618 L760 610 L752 605 L743 599 L735 594 L729 584 L721 579 L712 577 L702 578 L694 572 L685 570 L677 566 L667 567 L659 563 L650 560 L643 553 L634 550 L624 546 L616 542 L609 534 L600 530Z" fill="{{mp.camana.fill}}" transform="{{mp.camana.tr}}" onClick="{{mp.camana.pick}}"></path>
+<path class="prov" d="M950 580 L945 588 L942 597 L940 607 L932 614 L928 623 L923 631 L922 641 L916 649 L911 657 L904 664 L904 675 L900 683 L896 692 L890 700 L891 710 L894 720 L897 730 L896 740 L896 750 L900 760 L900 770 L897 780 L892 790 L893 800 L892 810 L890 820 L899 818 L907 814 L915 809 L925 809 L933 807 L942 805 L949 798 L960 795 L970 792 L981 790 L990 783 L1000 778 L1010 782 L1020 785 L1030 785 L1040 784 L1050 788 L1060 791 L1070 791 L1080 787 L1090 790 L1100 790 L1110 793 L1120 789 L1130 790 L1139 784 L1150 785 L1160 783 L1171 784 L1178 774 L1187 773 L1196 772 L1207 775 L1215 771 L1223 765 L1232 762 L1241 762 L1251 763 L1260 755 L1268 748 L1280 748 L1290 745 L1301 741 L1305 731 L1315 730 L1323 726 L1332 723 L1337 715 L1343 706 L1352 704 L1361 700 L1368 693 L1365 682 L1368 674 L1369 664 L1379 658 L1379 649 L1383 640 L1377 630 L1384 620 L1383 610 L1384 600 L1376 590 L1381 580 L1379 570 L1379 559 L1368 551 L1370 540 L1360 539 L1352 545 L1343 548 L1334 550 L1325 548 L1316 550 L1307 554 L1298 558 L1289 559 L1280 558 L1270 558 L1260 559 L1250 558 L1240 554 L1230 552 L1220 553 L1210 552 L1200 550 L1191 547 L1182 549 L1173 552 L1164 552 L1155 550 L1145 547 L1136 550 L1127 551 L1118 553 L1109 549 L1100 550 L1090 555 L1081 563 L1070 565 L1059 569 L1053 575 L1046 582 L1037 585 L1029 589 L1021 593 L1016 602 L1008 606 L1001 612 L993 603 L984 599 L975 595 L966 592 L959 583 L950 580Z" fill="{{mp.arequipa.fill}}" transform="{{mp.arequipa.tr}}" onClick="{{mp.arequipa.pick}}"></path>
+<path class="prov" d="M890 820 L888 830 L886 840 L881 849 L884 860 L881 870 L879 880 L877 890 L880 900 L880 910 L887 918 L897 919 L907 921 L914 928 L920 937 L929 942 L939 941 L948 944 L956 948 L964 955 L974 953 L983 955 L993 955 L998 965 L1006 970 L1012 976 L1025 977 L1029 986 L1036 993 L1040 1002 L1052 1003 L1056 1012 L1061 1020 L1062 1030 L1068 1036 L1077 1041 L1078 1048 L1086 1043 L1097 1041 L1100 1032 L1105 1024 L1107 1015 L1119 1011 L1123 1002 L1130 995 L1130 983 L1140 978 L1146 971 L1155 964 L1152 952 L1156 944 L1160 936 L1169 930 L1170 920 L1169 910 L1167 900 L1175 890 L1174 880 L1173 870 L1168 861 L1170 851 L1167 843 L1165 834 L1156 827 L1154 818 L1154 808 L1152 797 L1140 794 L1130 790 L1120 789 L1110 793 L1100 790 L1090 790 L1080 787 L1070 791 L1060 791 L1050 788 L1040 784 L1030 785 L1020 785 L1010 782 L1000 778 L990 783 L981 790 L970 792 L960 795 L949 798 L942 805 L933 807 L925 809 L915 809 L907 814 L899 818 L890 820Z" fill="{{mp.islay.fill}}" transform="{{mp.islay.tr}}" onClick="{{mp.islay.pick}}"></path>
+</g>
+<g fill="#cfc4b0" style="pointer-events: none" aria-hidden="true"><circle cx="1217" cy="398" r="3.2"></circle><circle cx="849" cy="651" r="2.6"></circle><circle cx="691" cy="731" r="1.7"></circle><circle cx="989" cy="715" r="4.0"></circle><circle cx="1147" cy="370" r="2.5"></circle><circle cx="675" cy="260" r="1.8"></circle><circle cx="239" cy="335" r="2.5"></circle><circle cx="658" cy="622" r="3.7"></circle><circle cx="1143" cy="921" r="2.2"></circle><circle cx="614" cy="441" r="3.7"></circle><circle cx="842" cy="350" r="1.5"></circle><circle cx="619" cy="451" r="2.9"></circle><circle cx="745" cy="687" r="3.2"></circle><circle cx="1092" cy="931" r="3.5"></circle><circle cx="584" cy="479" r="1.8"></circle><circle cx="158" cy="298" r="1.9"></circle><circle cx="203" cy="445" r="1.6"></circle><circle cx="1215" cy="683" r="1.9"></circle><circle cx="400" cy="430" r="2.4"></circle><circle cx="704" cy="182" r="1.8"></circle><circle cx="519" cy="352" r="3.6"></circle><circle cx="1316" cy="602" r="1.9"></circle><circle cx="1201" cy="761" r="2.2"></circle><circle cx="1081" cy="606" r="3.4"></circle><circle cx="502" cy="312" r="3.5"></circle><circle cx="1126" cy="877" r="3.3"></circle><circle cx="107" cy="365" r="2.1"></circle><circle cx="548" cy="309" r="2.1"></circle><circle cx="1171" cy="555" r="3.1"></circle><circle cx="1095" cy="813" r="2.7"></circle><circle cx="1019" cy="262" r="1.8"></circle><circle cx="1127" cy="239" r="3.6"></circle><circle cx="529" cy="621" r="1.8"></circle><circle cx="921" cy="600" r="3.8"></circle><circle cx="1152" cy="300" r="2.1"></circle><circle cx="454" cy="329" r="3.0"></circle><circle cx="410" cy="498" r="1.8"></circle><circle cx="1262" cy="436" r="2.6"></circle><circle cx="727" cy="605" r="2.8"></circle><circle cx="1117" cy="264" r="2.7"></circle><circle cx="1020" cy="629" r="2.3"></circle><circle cx="749" cy="628" r="3.5"></circle><circle cx="396" cy="363" r="3.4"></circle><circle cx="735" cy="634" r="3.4"></circle><circle cx="1265" cy="521" r="3.0"></circle><circle cx="732" cy="587" r="3.2"></circle><circle cx="663" cy="607" r="2.7"></circle><circle cx="947" cy="845" r="3.7"></circle><circle cx="935" cy="236" r="3.7"></circle><circle cx="1318" cy="478" r="2.7"></circle><circle cx="745" cy="422" r="2.0"></circle><circle cx="741" cy="161" r="4.0"></circle><circle cx="1103" cy="1023" r="1.8"></circle><circle cx="1090" cy="357" r="1.8"></circle><circle cx="1143" cy="346" r="1.9"></circle><circle cx="1274" cy="642" r="3.3"></circle><circle cx="972" cy="504" r="1.7"></circle><circle cx="1299" cy="703" r="3.5"></circle><circle cx="664" cy="422" r="2.9"></circle><circle cx="1284" cy="354" r="1.8"></circle><circle cx="760" cy="327" r="1.8"></circle><circle cx="334" cy="396" r="2.3"></circle><circle cx="1065" cy="375" r="2.8"></circle><circle cx="303" cy="430" r="1.5"></circle><circle cx="1030" cy="623" r="2.0"></circle><circle cx="636" cy="570" r="3.6"></circle><circle cx="585" cy="581" r="3.2"></circle><circle cx="1160" cy="771" r="3.1"></circle><circle cx="600" cy="430" r="1.6"></circle><circle cx="1041" cy="343" r="1.9"></circle><circle cx="1210" cy="737" r="2.2"></circle><circle cx="387" cy="378" r="2.6"></circle><circle cx="1344" cy="620" r="2.1"></circle><circle cx="570" cy="551" r="2.8"></circle><circle cx="469" cy="321" r="3.0"></circle><circle cx="931" cy="780" r="3.7"></circle><circle cx="580" cy="410" r="4.0"></circle><circle cx="892" cy="797" r="3.5"></circle><circle cx="1124" cy="885" r="3.0"></circle><circle cx="1240" cy="749" r="3.2"></circle><circle cx="244" cy="443" r="1.8"></circle><circle cx="1165" cy="631" r="3.1"></circle><circle cx="890" cy="747" r="2.7"></circle><circle cx="1050" cy="578" r="2.8"></circle><circle cx="934" cy="163" r="3.3"></circle><circle cx="1348" cy="569" r="2.5"></circle><circle cx="698" cy="750" r="3.4"></circle><circle cx="878" cy="711" r="1.7"></circle><circle cx="263" cy="341" r="3.4"></circle><circle cx="469" cy="639" r="1.5"></circle></g>
+<path d="{{selD}}" fill="none" stroke="#da2785" stroke-width="7" stroke-linejoin="round" transform="translate(0,-8)" style="pointer-events: none"></path>
+</svg>
+<sc-for list="{{provincias}}" as="pv" hint-placeholder-count="8">
+<sc-if value="{{pv.on}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" onClick="{{pv.pick}}" style="{{pv.plaqueOn}}"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: #e2c27a"></span>{{pv.upper}}<span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: #e2c27a"></span></button>
+</sc-if>
+<sc-if value="{{pv.off}}" hint-placeholder-val="{{true}}">
+<button class="placa" type="button" aria-pressed="false" onClick="{{pv.pick}}" style="{{pv.plaqueOff}}"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: #a8813a"></span>{{pv.upper}}<span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: #a8813a"></span></button>
+</sc-if>
+</sc-for>
+</div>
+<p style="margin: 16px 0 0; font-size: 14px; font-weight: 300; font-style: italic; color: #bcc785">{{t.mapHint}}</p>
+</div>
+
+<div style="flex: 1 1 340px; display: flex; flex-direction: column; gap: 20px">
+<div aria-live="polite" style="background: #1e3412; border-top: 6px solid #da2785; padding: 28px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 14px; font-weight: 300; font-style: italic; color: #bcc785">{{prov.place}}</span>
+<h3 style="margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 48px; line-height: 0.95; font-weight: 700; color: #ffffff">{{prov.name}}</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.65; font-weight: 300">{{prov.text}}</p>
+<p style="margin: 0; padding-top: 12px; border-top: 1px solid #3a5228; font-size: 15px; line-height: 1.55; font-weight: 300"><strong style="font-weight: 500; color: #bcc785">{{t.onTable}}</strong> {{prov.prod}}</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px">
+<sc-if value="{{prov.hasDish}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{prov.addDish}}" style="min-height: 44px; padding: 0 18px; border: 0; border-radius: 8px; background: #bcc785; color: #152808; font-size: 14px; font-weight: 500">{{prov.dishLabel}}</button>
+</sc-if>
+<a href="#carta" onClick="{{prov.goCarta}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border: 1px solid #bcc785; border-radius: 8px; color: #e9edd9; text-decoration: none; font-size: 14px">{{t.seeMenu}}</a>
+</div>
+<sc-if value="{{prov.added}}" hint-placeholder-val="{{false}}">
+<p role="status" style="margin: 0; font-size: 14px; color: #bcc785">{{prov.addedText}}</p>
+</sc-if>
+</div>
+<div role="group" aria-label="{{t.provGroup}}" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px">
+<sc-for list="{{provincias}}" as="pv" hint-placeholder-count="8">
+<sc-if value="{{pv.on}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" onClick="{{pv.pick}}" style="min-height: 44px; padding: 0 14px; border: 0; border-radius: 5px; background: #da2785; color: #ffffff; text-align: left; font-size: 15px; font-weight: 500; font-style: italic">{{pv.name}}</button>
+</sc-if>
+<sc-if value="{{pv.off}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-pressed="false" onClick="{{pv.pick}}" style="min-height: 44px; padding: 0 14px; border: 1px solid #3a5228; border-radius: 5px; background: transparent; color: #e9edd9; text-align: left; font-size: 15px; font-style: italic">{{pv.name}}</button>
+</sc-if>
+</sc-for>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ================= CARTA ================= -->
+<section id="carta" aria-labelledby="h-carta" style="position: relative; isolation: isolate; overflow: hidden; padding: 24px 0 120px">
+<img class="deco" src="img/grabado-gris.png" alt="" aria-hidden="true" style="position: absolute; z-index: -1; left: -160px; bottom: 0; width: 760px; opacity: 0.45; transform: scaleX(-1); pointer-events: none">
+<img class="deco" src="img/grabado-gris.png" alt="" aria-hidden="true" style="position: absolute; z-index: -1; right: -200px; top: 120px; width: 620px; opacity: 0.35; pointer-events: none">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-right: 24px; flex-wrap: wrap">
+<div style="{{bandStyle}}">
+<h2 id="h-carta" style="{{bandTitleStyle}}">{{catTitle}}</h2>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; padding-left: 24px">
+<sc-if value="{{vegOnly}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" onClick="{{toggleVeg}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border: 0; border-radius: 8px; background: #475a29; color: #ffffff; font-size: 15px; font-weight: 300; font-style: italic">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6"><circle cx="12" cy="12" r="10.5"></circle><path d="M12 18c0-5 2-8 6-9-1 4-3 7-6 9z"></path><path d="M12 18c0-4-2-7-6-8 1 4 3 6 6 8z"></path></svg>{{t.vegOnly}}</button>
+</sc-if>
+<sc-if value="{{vegAll}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-pressed="false" onClick="{{toggleVeg}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border: 0; border-radius: 8px; background: #cccccc; color: #1d1d1b; font-size: 15px; font-weight: 300; font-style: italic">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5f6e1f" stroke-width="1.6"><circle cx="12" cy="12" r="10.5"></circle><path d="M12 18c0-5 2-8 6-9-1 4-3 7-6 9z"></path><path d="M12 18c0-4-2-7-6-8 1 4 3 6 6 8z"></path></svg>{{t.vegOnly}}</button>
+</sc-if>
+</div>
+</div>
+
+<div style="max-width: 1040px; margin: 0 auto; padding: 28px 24px 0">
+<div role="group" aria-label="{{t.indexLabel}}" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px">
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="4">
+<sc-if value="{{c.on}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" onClick="{{c.pick}}" style="{{c.onStyle}}">{{c.label}}</button>
+</sc-if>
+<sc-if value="{{c.off}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-pressed="false" onClick="{{c.pick}}" style="{{c.offStyle}}">{{c.label}}</button>
+</sc-if>
+</sc-for>
+</div>
+<p style="margin: 28px auto 48px; max-width: 34em; text-align: center; font-size: 16px; line-height: 1.6; font-weight: 300; font-style: italic">{{catIntro}}</p>
+
+<div class="dos-col" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 96px; row-gap: 44px">
+<sc-for list="{{dishes}}" as="d" hint-placeholder-count="6">
+<article style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px">
+<sc-if value="{{d.hasPhoto}}" hint-placeholder-val="{{false}}">
+<img src="{{d.photo}}" alt="{{d.photoAlt}}" style="width: 240px; height: 210px; object-fit: cover; border-radius: 46% 54% 42% 58% / 52% 40% 60% 48%; margin-bottom: 14px; display: block">
+</sc-if>
+<div style="display: flex; align-items: center; justify-content: center; gap: 6px">
+<h3 style="margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 23px; line-height: 28px; font-weight: 700; letter-spacing: 0.02em; color: #475a29; text-wrap: balance">{{d.name}}</h3>
+<sc-if value="{{d.veg}}" hint-placeholder-val="{{false}}">
+<svg role="img" aria-label="{{t.vegLabel}}" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5f6e1f" stroke-width="1.6"><circle cx="12" cy="12" r="10.5"></circle><path d="M12 18c0-5 2-8 6-9-1 4-3 7-6 9z"></path><path d="M12 18c0-4-2-7-6-8 1 4 3 6 6 8z"></path></svg>
+</sc-if>
+</div>
+<sc-if value="{{d.hasNote}}" hint-placeholder-val="{{false}}">
+<span style="background: #c5c8c1; color: #475a29; border-radius: 4px; padding: 0 8px; font-size: 12px; line-height: 20px; font-weight: 500; font-style: italic">{{d.note}}</span>
+</sc-if>
+<p style="margin: 0; padding-top: 2px; font-size: 15px; line-height: 19px; font-weight: 300; font-style: italic; max-width: 340px">{{d.desc}}</p>
+<p style="margin: 0; padding-top: 6px; font-size: 17px; line-height: 22px; font-weight: 500; color: #475a29">{{d.price}}</p>
+<sc-if value="{{d.inCart}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; align-items: center; gap: 6px; padding-top: 8px">
+<button type="button" aria-label="{{d.decLabel}}" onClick="{{d.dec}}" style="width: 44px; height: 40px; border: 1px solid #475a29; background: #ffffff; color: #475a29; border-radius: 8px; font-size: 18px">−</button>
+<span style="min-width: 92px; font-size: 14px; font-weight: 500; color: #475a29">{{d.qtyLabel}}</span>
+<button type="button" aria-label="{{d.incLabel}}" onClick="{{d.inc}}" style="width: 44px; height: 40px; border: 1px solid #475a29; background: #475a29; color: #ffffff; border-radius: 8px; font-size: 18px">+</button>
+</div>
+</sc-if>
+<sc-if value="{{d.notInCart}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-label="{{d.addLabel}}" onClick="{{d.inc}}" style="margin-top: 8px; min-height: 40px; padding: 0 18px; border: 1px solid #c5c8c1; background: #ffffff; color: #475a29; border-radius: 8px; font-size: 14px">{{t.add}}</button>
+</sc-if>
+</article>
+</sc-for>
+</div>
+<sc-if value="{{noDishes}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; text-align: center; font-size: 15px; font-style: italic; font-weight: 300">{{t.noVeg}}</p>
+</sc-if>
+</div>
+</section>
+
+<!-- ================= ARPA EN VIVO ================= -->
+<section aria-labelledby="h-arpa" class="osc" style="background: #152808; color: #e9edd9">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0 64px">
+<div style="flex: 1 1 340px; min-height: 380px; margin-top: 72px; border-radius: 999px 999px 0 0; background: #2c4419; display: flex; align-items: center; justify-content: center; padding: 40px; text-align: center; font-size: 14px; font-style: italic; color: #bcc785">{{t.photoPatio}}</div>
+<div style="flex: 999 1 460px; min-width: 0; padding: 80px 0; display: flex; flex-direction: column; gap: 18px">
+<h2 id="h-arpa" style="margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 56px; line-height: 1; font-weight: 600">{{t.musicTitle}}</h2>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; font-weight: 300; max-width: 32em">{{t.musicText}}</p>
+<p style="margin: 0; font-size: 15px; font-weight: 500; color: #bcc785">{{t.musicSchedule}}</p>
+</div>
+</div>
+</section>
+
+<!-- ================= RESERVAS ================= -->
+<section id="reservas" aria-labelledby="h-res" style="position: relative; isolation: isolate; max-width: 1200px; margin: 0 auto; padding: 120px 24px 56px; display: flex; flex-direction: column; gap: 40px">
+<img class="deco" src="img/grabado-gris.png" alt="" aria-hidden="true" style="position: absolute; z-index: -1; right: -140px; top: 30px; width: 600px; opacity: 0.4; pointer-events: none">
+<div style="display: flex; flex-direction: column; gap: 12px; max-width: 40em">
+<h2 id="h-res" style="margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 56px; line-height: 1; font-weight: 700; color: #475a29">{{t.resTitle}}</h2>
+<p style="margin: 0; font-size: 17px; line-height: 1.7; font-weight: 300">{{t.resSub}}</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; align-items: stretch; border: 1px solid #c5c8c1">
+<aside class="osc" aria-label="{{t.summaryLabel}}" style="flex: 1 1 300px; background: #152808; color: #e9edd9; padding: 40px 32px; display: flex; flex-direction: column; gap: 20px">
+<span style="font-size: 14px; font-weight: 300; color: #bcc785">{{t.summaryLabel}}</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 40px; line-height: 1; font-weight: 700">{{sumDay}}</span>
+<span style="font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 30px; font-weight: 600; color: #bcc785">{{sumHour}}</span>
+</div>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; font-weight: 300; border-top: 1px solid #2c4419; padding-top: 18px">{{sumLine}}</p>
+<p style="margin: auto 0 0; font-size: 13px; line-height: 1.6; font-weight: 300; color: #bcc785">{{t.summaryNote}}</p>
+</aside>
+
+<div style="flex: 999 1 560px; min-width: 0; padding: 40px; box-sizing: border-box">
+<sc-if value="{{resOpen}}" hint-placeholder-val="{{true}}">
+<form onSubmit="{{submitRes}}" style="display: flex; flex-direction: column; gap: 28px">
+<fieldset style="border: 0; margin: 0; padding: 0">
+<legend style="padding: 0 0 12px; font-size: 15px; font-weight: 500">{{t.typeLabel}}</legend>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px">
+<sc-for list="{{tipos}}" as="x" hint-placeholder-count="3">
+<sc-if value="{{x.on}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" onClick="{{x.pick}}" style="min-height: 52px; padding: 0 16px; border: 1px solid #475a29; border-radius: 8px; background: #475a29; color: #ffffff; font-size: 15px; font-weight: 500">{{x.label}}</button>
+</sc-if>
+<sc-if value="{{x.off}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-pressed="false" onClick="{{x.pick}}" style="min-height: 52px; padding: 0 16px; border: 1px solid #c5c8c1; border-radius: 8px; background: #ffffff; color: #1d1d1b; font-size: 15px">{{x.label}}</button>
+</sc-if>
+</sc-for>
+</div>
+</fieldset>
+
+<fieldset style="border: 0; margin: 0; padding: 0">
+<legend style="padding: 0 0 12px; font-size: 15px; font-weight: 500">{{t.dayLabel}}</legend>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px">
+<sc-for list="{{days}}" as="d" hint-placeholder-count="7">
+<sc-if value="{{d.on}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" aria-label="{{d.aria}}" onClick="{{d.pick}}" style="min-height: 72px; border: 1px solid #475a29; border-radius: 8px; background: #475a29; color: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px">
+<span style="font-size: 12px">{{d.wd}}</span><span style="font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 28px; font-weight: 700; line-height: 1">{{d.num}}</span>
+</button>
+</sc-if>
+<sc-if value="{{d.off}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-pressed="false" aria-label="{{d.aria}}" onClick="{{d.pick}}" style="min-height: 72px; border: 1px solid #c5c8c1; border-radius: 8px; background: #ffffff; color: #1d1d1b; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px">
+<span style="font-size: 12px; color: #555555">{{d.wd}}</span><span style="font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 28px; font-weight: 700; line-height: 1; color: #475a29">{{d.num}}</span>
+</button>
+</sc-if>
+</sc-for>
+</div>
+</fieldset>
+
+<div style="display: flex; flex-wrap: wrap; gap: 28px">
+<fieldset style="flex: 999 1 300px; border: 0; margin: 0; padding: 0">
+<legend style="padding: 0 0 12px; font-size: 15px; font-weight: 500">{{t.timeLabel}}</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{horas}}" as="h" hint-placeholder-count="7">
+<sc-if value="{{h.on}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" onClick="{{h.pick}}" style="min-height: 44px; min-width: 74px; border: 1px solid #475a29; border-radius: 8px; background: #475a29; color: #ffffff; font-size: 14px; font-weight: 500">{{h.label}}</button>
+</sc-if>
+<sc-if value="{{h.off}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-pressed="false" onClick="{{h.pick}}" style="min-height: 44px; min-width: 74px; border: 1px solid #c5c8c1; border-radius: 8px; background: #ffffff; color: #1d1d1b; font-size: 14px">{{h.label}}</button>
+</sc-if>
+</sc-for>
+</div>
+</fieldset>
+<div style="flex: 1 1 170px; display: flex; flex-direction: column; gap: 12px">
+<span id="lbl-pers" style="font-size: 15px; font-weight: 500">{{t.peopleLabel}}</span>
+<div role="group" aria-labelledby="lbl-pers" style="display: flex; align-items: center; gap: 8px">
+<button type="button" aria-label="{{t.less}}" onClick="{{lessP}}" style="width: 44px; height: 44px; border: 1px solid #475a29; border-radius: 8px; background: #ffffff; color: #475a29; font-size: 20px">−</button>
+<span aria-live="polite" style="min-width: 48px; text-align: center; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 34px; font-weight: 700; color: #475a29">{{personas}}</span>
+<button type="button" aria-label="{{t.more}}" onClick="{{moreP}}" style="width: 44px; height: 44px; border: 1px solid #475a29; border-radius: 8px; background: #475a29; color: #ffffff; font-size: 20px">+</button>
+</div>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="f-nombre" style="font-size: 15px; font-weight: 500">{{t.nameLabel}}</label>
+<input id="f-nombre" type="text" autocomplete="name" value="{{nombre}}" onChange="{{onNombre}}" style="min-height: 50px; padding: 0 14px; border: 1px solid #8a8f84; border-radius: 8px; font-size: 16px; color: #1d1d1b; background: #ffffff">
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="f-tel" style="font-size: 15px; font-weight: 500">{{t.phoneLabel}}</label>
+<input id="f-tel" type="tel" autocomplete="tel" placeholder="+51" value="{{telefono}}" onChange="{{onTelefono}}" style="min-height: 50px; padding: 0 14px; border: 1px solid #8a8f84; border-radius: 8px; font-size: 16px; color: #1d1d1b; background: #ffffff">
+</div>
+</div>
+
+<sc-if value="{{resError}}" hint-placeholder-val="{{false}}">
+<p role="alert" style="margin: 0; font-size: 14px; color: #b3261e">{{t.needData}}</p>
+</sc-if>
+
+<button type="submit" style="align-self: flex-start; min-height: 56px; padding: 0 36px; border: 0; border-radius: 8px; background: #3d792f; color: #ffffff; font-size: 16px; font-weight: 500">{{t.submitRes}}</button>
+</form>
+</sc-if>
+
+<sc-if value="{{resDone}}" hint-placeholder-val="{{false}}">
+<div role="status" style="min-height: 360px; display: flex; flex-direction: column; justify-content: center; gap: 18px; align-items: flex-start">
+<span style="font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 44px; line-height: 1; font-weight: 700; color: #475a29">{{t.resDoneTitle}}</span>
+<p style="margin: 0; font-size: 17px; line-height: 1.7; font-weight: 300; max-width: 32em">{{resDoneText}}</p>
+<button type="button" onClick="{{resetRes}}" style="min-height: 44px; padding: 0 18px; border: 1px solid #475a29; border-radius: 8px; background: #ffffff; color: #475a29; font-size: 14px">{{t.newRes}}</button>
+</div>
+</sc-if>
+</div>
+</div>
+</section>
+
+<!-- ================= PEDIDOS ================= -->
+<section id="pedidos" aria-labelledby="h-ped" style="max-width: 1200px; margin: 0 auto; padding: 96px 24px 56px; display: flex; flex-wrap: wrap; gap: 56px; align-items: flex-start">
+<div style="flex: 1 1 340px; display: flex; flex-direction: column; gap: 16px">
+<h2 id="h-ped" style="margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 56px; line-height: 1; font-weight: 700; color: #475a29; text-wrap: balance">{{t.orderTitle}}</h2>
+<p style="margin: 0; font-size: 17px; line-height: 1.7; font-weight: 300">{{t.orderSub}}</p>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; font-weight: 300">{{t.payList}}</p>
+</div>
+
+<div style="flex: 999 1 560px; min-width: 0; border: 1px solid #c5c8c1; padding: 36px; box-sizing: border-box">
+<sc-if value="{{orderOpen}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 24px">
+<div role="group" aria-label="{{t.modeLabel}}" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid #475a29; border-radius: 8px; overflow: hidden">
+<sc-for list="{{modos}}" as="m" hint-placeholder-count="2">
+<sc-if value="{{m.on}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" onClick="{{m.pick}}" style="min-height: 52px; border: 0; background: #475a29; color: #ffffff; font-size: 15px; font-weight: 500">{{m.label}}</button>
+</sc-if>
+<sc-if value="{{m.off}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-pressed="false" onClick="{{m.pick}}" style="min-height: 52px; border: 0; background: #ffffff; color: #475a29; font-size: 15px">{{m.label}}</button>
+</sc-if>
+</sc-for>
+</div>
+
+<sc-if value="{{cartEmpty}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: 8px 0">
+<p style="margin: 0; font-size: 16px; line-height: 1.6; font-weight: 300">{{t.empty}}</p>
+<a href="#carta" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; background: #475a29; color: #ffffff; border-radius: 8px; text-decoration: none; font-size: 14px">{{t.goMenu}}</a>
+</div>
+</sc-if>
+
+<sc-if value="{{cartFull}}" hint-placeholder-val="{{false}}">
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column">
+<sc-for list="{{cartItems}}" as="ci" hint-placeholder-count="2">
+<li style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0; border-bottom: 1px dashed #c5c8c1">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 21px; font-weight: 700; color: #475a29">{{ci.name}}</span>
+<span style="font-size: 14px; font-weight: 300">{{ci.price}}</span>
+</div>
+<div style="display: flex; align-items: center; gap: 6px">
+<button type="button" aria-label="{{ci.decLabel}}" onClick="{{ci.dec}}" style="width: 44px; height: 40px; border: 1px solid #475a29; background: #ffffff; color: #475a29; border-radius: 8px; font-size: 18px">−</button>
+<span style="min-width: 28px; text-align: center; font-size: 16px; font-weight: 500">{{ci.qty}}</span>
+<button type="button" aria-label="{{ci.incLabel}}" onClick="{{ci.inc}}" style="width: 44px; height: 40px; border: 1px solid #475a29; background: #475a29; color: #ffffff; border-radius: 8px; font-size: 18px">+</button>
+</div>
+</li>
+</sc-for>
+</ul>
+
+<sc-if value="{{isDelivery}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="f-dir" style="font-size: 15px; font-weight: 500">{{t.address}}</label>
+<input id="f-dir" type="text" autocomplete="street-address" value="{{direccion}}" onChange="{{onDireccion}}" style="min-height: 50px; padding: 0 14px; border: 1px solid #8a8f84; border-radius: 8px; font-size: 16px; color: #1d1d1b">
+<span style="font-size: 13px; color: #555555">{{t.zones}}</span>
+</div>
+</sc-if>
+<sc-if value="{{isPickup}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; padding: 14px 16px; background: #e9edd9; font-size: 15px; font-weight: 300">{{t.pickupNote}}</p>
+</sc-if>
+
+<fieldset style="border: 0; margin: 0; padding: 0">
+<legend style="padding: 0 0 12px; font-size: 15px; font-weight: 500">{{t.payLabel}}</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{pagos}}" as="pg" hint-placeholder-count="3">
+<sc-if value="{{pg.on}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" onClick="{{pg.pick}}" style="min-height: 44px; padding: 0 20px; border: 1px solid #475a29; border-radius: 8px; background: #475a29; color: #ffffff; font-size: 14px; font-weight: 500">{{pg.label}}</button>
+</sc-if>
+<sc-if value="{{pg.off}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-pressed="false" onClick="{{pg.pick}}" style="min-height: 44px; padding: 0 20px; border: 1px solid #c5c8c1; border-radius: 8px; background: #ffffff; color: #1d1d1b; font-size: 14px">{{pg.label}}</button>
+</sc-if>
+</sc-for>
+</div>
+</fieldset>
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid #475a29; padding-top: 20px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 24px; font-weight: 700; color: #475a29">{{cartSummary}}</span>
+<span style="font-size: 13px; color: #555555">{{t.totalNote}}</span>
+</div>
+<button type="button" onClick="{{sendOrder}}" style="min-height: 56px; padding: 0 32px; border: 0; border-radius: 8px; background: #3d792f; color: #ffffff; font-size: 16px; font-weight: 500">{{t.sendOrder}}</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{orderDone}}" hint-placeholder-val="{{false}}">
+<div role="status" style="min-height: 280px; display: flex; flex-direction: column; justify-content: center; gap: 18px; align-items: flex-start">
+<span style="font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 44px; line-height: 1; font-weight: 700; color: #475a29">{{t.orderDoneTitle}}</span>
+<p style="margin: 0; font-size: 17px; line-height: 1.7; font-weight: 300; max-width: 32em">{{orderDoneText}}</p>
+<button type="button" onClick="{{resetOrder}}" style="min-height: 44px; padding: 0 18px; border: 1px solid #475a29; border-radius: 8px; background: #ffffff; color: #475a29; font-size: 14px">{{t.newOrder}}</button>
+</div>
+</sc-if>
+</div>
+</section>
+
+<!-- ================= EVENTOS ================= -->
+<section id="eventos" aria-labelledby="h-ev" style="max-width: 1200px; margin: 0 auto; padding: 96px 24px 56px; display: flex; flex-direction: column; gap: 48px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 12px; max-width: 36em">
+<h2 id="h-ev" style="margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 56px; line-height: 1; font-weight: 700; color: #475a29; text-wrap: balance">{{t.evTitle}}</h2>
+<p style="margin: 0; font-size: 17px; line-height: 1.7; font-weight: 300">{{t.evText}}</p>
+</div>
+<a href="#reservas" onClick="{{pickEvento}}" style="display: inline-flex; align-items: center; min-height: 56px; padding: 0 28px; background: #3d792f; color: #ffffff; border-radius: 8px; text-decoration: none; font-size: 15px; font-weight: 500">{{t.evCta}}</a>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 40px 32px">
+<sc-for list="{{eventos}}" as="e" hint-placeholder-count="3">
+<article style="display: flex; flex-direction: column; gap: 16px">
+<div style="aspect-ratio: 5 / 4; border-radius: 999px 999px 0 0; background: #e9edd9; display: flex; align-items: center; justify-content: center; padding: 32px; text-align: center; font-size: 13px; font-style: italic; color: #475a29">{{e.photo}}</div>
+<h3 style="margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 30px; line-height: 1.05; font-weight: 700; color: #475a29">{{e.t}}</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.65; font-weight: 300">{{e.d}}</p>
+</article>
+</sc-for>
+</div>
+</section>
+
+<!-- ================= UBICACIÓN ================= -->
+<section id="visitanos" aria-labelledby="h-vis" style="max-width: 1200px; margin: 0 auto; padding: 96px 24px 120px; display: flex; flex-wrap: wrap; align-items: stretch">
+<div style="flex: 1 1 360px; background: #475a29; color: #ffffff; padding: 48px 40px; display: flex; flex-direction: column; gap: 24px; box-sizing: border-box">
+<h2 id="h-vis" style="margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 52px; line-height: 1; font-weight: 700">{{t.visitTitle}}</h2>
+<address style="font-style: normal; display: flex; flex-direction: column; gap: 18px; font-size: 16px; line-height: 1.6; font-weight: 300">
+<span>Calle La Recoleta 220, Yanahuara<br>Arequipa, Perú</span>
+<span>{{t.hours}}</span>
+<span>WhatsApp [+51 NÚMERO]</span>
+<span>Facebook e Instagram: huertadloncco</span>
+</address>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: auto">
+<a href="https://www.google.com/maps/search/?api=1&amp;query=Calle+La+Recoleta+220+Yanahuara+Arequipa" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 20px; background: #ffffff; color: #475a29; border-radius: 8px; text-decoration: none; font-size: 15px; font-weight: 500">{{t.directions}}</a>
+<a href="#reservas" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 20px; border: 1px solid #ffffff; color: #ffffff; border-radius: 8px; text-decoration: none; font-size: 15px">{{t.reserveBtn}}</a>
+</div>
+</div>
+<div style="flex: 999 1 520px; min-width: 0; min-height: 420px; background: #e9edd9; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; font-size: 14px; font-style: italic; color: #475a29">{{t.mapPh}}</div>
+</section>
+
+<!-- ================= PIE ================= -->
+<footer class="osc" style="position: relative; isolation: isolate; overflow: hidden; background: #152808; color: #e9edd9; padding: 96px clamp(24px, 5vw, 72px) 40px">
+<img src="img/grabado-claro.png" alt="" aria-hidden="true" style="position: absolute; z-index: -1; right: -80px; top: -10px; width: min(1000px, 85%); opacity: 0.1; pointer-events: none">
+<div style="display: flex; flex-direction: column; gap: 56px">
+<img src="img/logo-blanco.png" alt="La Huerta del Loncco" style="width: 150px; height: auto; display: block">
+<p style="margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 52px; line-height: 1.05; font-weight: 600; color: #bcc785; max-width: 15em; text-wrap: balance">{{t.footerPhrase}}</p>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px; border-top: 1px solid #2c4419; padding-top: 28px">
+<span style="font-size: 14px; font-weight: 300">La Huerta del Loncco S.A.C., Calle La Recoleta 220, Yanahuara, Arequipa</span>
+<nav aria-label="{{t.navLabel}}" style="display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 14px">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+<a href="{{n.href}}" style="color: #e9edd9; padding: 8px 0">{{n.label}}</a>
+</sc-for>
+</nav>
+</div>
+</div>
+</footer>
+
+</div>
+</template>
+<script>
+(function () {
+  function DCLogic(props) { this.props = props || {}; this.state = {}; }
+  DCLogic.prototype.setState = function (p) {
+    var n = typeof p === 'function' ? p(this.state, this.props) : p;
+    this.state = Object.assign({}, this.state, n);
+    schedule();
+  };
+  DCLogic.prototype.forceUpdate = function () { schedule(); };
+  window.DCLogic = DCLogic;
+
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  function look(path, sc) {
+    if (path == null) return undefined;
+    path = path.trim();
+    if (path === 'true') return true;
+    if (path === 'false') return false;
+    if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+    var parts = path.split('.'), v = sc;
+    for (var i = 0; i < parts.length; i++) { if (v == null) return undefined; v = v[parts[i]]; }
+    return v;
+  }
+  function whole(str) { var m = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/.exec(str || ''); return m ? m[1] : null; }
+  function interp(str, sc) { return str.replace(HOLE, function (_, p) { var v = look(p, sc); return v == null ? '' : String(v); }); }
+  function kids(node, sc, out) { for (var c = node.firstChild; c; c = c.nextSibling) build(c, sc, out); }
+  function build(node, sc, out) {
+    if (node.nodeType === 3) { out.appendChild(document.createTextNode(interp(node.nodeValue, sc))); return; }
+    if (node.nodeType !== 1) return;
+    var tag = node.localName;
+    if (tag === 'sc-for') {
+      var list = look(whole(node.getAttribute('list')), sc) || [], as = node.getAttribute('as');
+      list.forEach(function (it, i) { var s2 = Object.create(sc); s2[as] = it; s2.$index = i; kids(node, s2, out); });
+      return;
+    }
+    if (tag === 'sc-if') { if (look(whole(node.getAttribute('value')), sc)) kids(node, sc, out); return; }
+    var el = node.namespaceURI === SVGNS ? document.createElementNS(SVGNS, tag) : document.createElement(tag);
+    for (var i = 0; i < node.attributes.length; i++) {
+      var a = node.attributes[i], name = a.name, w = whole(a.value);
+      if (name.indexOf('hint-') === 0) continue;
+      if (name.slice(0, 2).toLowerCase() === 'on') {
+        var fn = look(w, sc);
+        if (typeof fn === 'function') {
+          var ev = name.slice(2).toLowerCase();
+          if (ev === 'change' && (tag === 'input' || tag === 'textarea')) ev = 'input';
+          el.addEventListener(ev, fn);
+        }
+        continue;
+      }
+      var val = w !== null ? look(w, sc) : interp(a.value, sc);
+      if (name === 'value' && (tag === 'input' || tag === 'textarea')) { el.value = val == null ? '' : val; continue; }
+      if (val === false || val == null) continue;
+      el.setAttribute(name, val === true ? '' : String(val));
+    }
+    kids(node, sc, el);
+    out.appendChild(el);
+  }
+
+  var root, tpl, comp, pending = false;
+  function pathOf(el) {
+    var p = [];
+    while (el && el !== root) { var i = 0, s = el; while ((s = s.previousElementSibling)) i++; p.unshift(i); el = el.parentElement; }
+    return el === root ? p : null;
+  }
+  function nodeAt(p) { var n = root; for (var i = 0; i < p.length && n; i++) n = n.children[p[i]]; return n; }
+  function schedule() { if (pending) return; pending = true; setTimeout(render, 0); }
+  function render() {
+    pending = false;
+    var ae = document.activeElement, fid = ae && ae.id, fpath = ae && root.contains(ae) ? pathOf(ae) : null, s1 = null, s2 = null;
+    try { if (ae && ae.selectionStart != null) { s1 = ae.selectionStart; s2 = ae.selectionEnd; } } catch (e) {}
+    var frag = document.createDocumentFragment();
+    kids(tpl.content, comp.renderVals(), frag);
+    root.replaceChildren(frag);
+    document.documentElement.lang = (comp.state && comp.state.lang) || 'es';
+    var target = (fid && document.getElementById(fid)) || (fpath && nodeAt(fpath));
+    if (target && target.focus) {
+      target.focus({ preventScroll: true });
+      try { if (s1 != null) target.setSelectionRange(s1, s2); } catch (e) {}
+    }
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    root = document.getElementById('app');
+    tpl = document.getElementById('plantilla');
+    comp = new Component({});
+    render();
+    setTimeout(function () { root.classList.add('listo'); }, 1500);
+  });
+})();
+</script>
+<script>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      lang: 'es', cat: 'picanteria', veg: false, cart: {}, prov: 'castilla', provAdded: false,
+      tipo: 'mesa', day: 0, hora: '13:00', personas: 4, nombre: '', telefono: '', resError: false, resDone: false,
+      modo: 'delivery', pago: 'yape', direccion: '', orderDone: false
+    };
+  }
+  renderVals() {
+    var s = this.state, self = this, en = s.lang === 'en';
+    var T = {
+      es: {
+        navLabel: 'Secciones', indexLabel: 'Secciones de la carta', reserveBtn: 'Reservar mesa', orderBtn: 'Pedir a domicilio',
+        heroTitle: 'El alma de Arequipa en cada bocado',
+        heroText: 'Platos de las 8 provincias de Arequipa, coctelería de autor y arpa en vivo, en una casa de campo en Yanahuara.',
+        press: 'Recomendados por El Comercio y por guías de viaje de Arequipa.',
+        illusLabel: 'Ilustración de rocoto, ají, ajo, limón y hojas de la huerta', chupeAlt: 'Chupe de camarón servido en olla de barro, con camarón entero, choclo, papa y huevo',
+        aboutTitle: 'Cocina con orgullo de chacra',
+        about1: 'Nuestra cocina es un homenaje a la rica diversidad cultural y culinaria de nuestra tierra. Cada plato tiene una provincia y un productor detrás.',
+        about2: 'Para los amantes de la buena comida y de la autenticidad arequipeña.',
+        mapAlt: 'Mapa de la región Arequipa en sillar con sus 8 provincias: La Unión, Caravelí, Condesuyos, Castilla, Caylloma, Camaná, Arequipa e Islay.',
+        mapCaption: '7 días, 8 provincias, un solo lugar. Vengan a recorrer Arequipa sin salir de la mesa.',
+        mapTitle: '7 días, 8 provincias, un solo lugar', mapSub: 'Vengan a recorrer Arequipa sin salir de la mesa. Toquen una provincia para ver qué trae a nuestra cocina.', mapHint: 'Pueden tocar la provincia o su placa.', provGroup: 'Provincias de Arequipa',
+        onTable: 'En nuestra mesa:', seeMenu: 'Ver la carta',
+        vegOnly: 'Solo vegetarianos', vegLabel: 'Vegetariano', add: 'Agregar al pedido', noVeg: 'Esta sección no tiene platos vegetarianos. Elijan otra sección o quiten el filtro.',
+        musicTitle: 'Almuerzos con arpa en vivo', musicText: 'Patio campestre, muros de sillar y la música del arpa acompañando la mesa. Al reservar, el calendario les muestra qué días hay música.', musicSchedule: '[DÍAS Y HORARIO DE MÚSICA EN VIVO]', photoPatio: '[Foto: patio con arpa en vivo]',
+        resTitle: 'Reserven su mesa', resSub: 'Elijan día, hora y número de personas. Les confirmamos por WhatsApp al momento. Para grupos y eventos les escribimos con opciones de menú y maridaje.',
+        summaryLabel: 'Su reserva', summaryNote: 'Les enviamos la confirmación por WhatsApp y un recordatorio el mismo día.',
+        typeLabel: 'Tipo de reserva', dayLabel: 'Día', timeLabel: 'Hora', peopleLabel: 'Personas', less: 'Una persona menos', more: 'Una persona más',
+        nameLabel: 'Nombre', phoneLabel: 'WhatsApp', needData: 'Falta su nombre o su número de WhatsApp. Complétenlos para confirmar la reserva.', submitRes: 'Confirmar reserva',
+        resDoneTitle: 'Reserva confirmada', newRes: 'Hacer otra reserva',
+        orderTitle: 'Pidan directo a nuestra cocina', orderSub: 'Delivery o recojo en el local. Les avisamos por WhatsApp cuando el pedido salga de cocina.',
+        payList: 'Pagan con Yape, Plin o tarjeta Visa y Mastercard.',
+        modeLabel: 'Modalidad', empty: 'Aún no hay platos en su pedido. Agréguenlos desde la carta.', goMenu: 'Ir a la carta',
+        address: 'Dirección de entrega', zones: 'Reparto en Yanahuara, Cayma, Cercado y distritos cercanos. [ZONAS Y TARIFAS]',
+        pickupNote: 'Recójanlo en Calle La Recoleta 220, Yanahuara. Les avisamos cuando esté listo.',
+        payLabel: 'Medio de pago', totalNote: 'El importe se calcula con los precios de la carta.', sendOrder: 'Enviar pedido',
+        orderDoneTitle: 'Pedido enviado', newOrder: 'Hacer otro pedido',
+        evTitle: 'Una mesa larga para celebrar', evText: 'Almuerzos de empresa, celebraciones familiares y grupos de turismo, con menú y maridaje a medida.', evCta: 'Cotizar un evento',
+        visitTitle: 'Visítennos', hours: '[HORARIO DE ATENCIÓN]', directions: 'Cómo llegar', mapPh: '[Mapa de Google: Calle La Recoleta 220, Yanahuara]',
+        footerPhrase: 'Gracias por acompañarnos en este viaje de sabores y tradiciones.'
+      },
+      en: {
+        navLabel: 'Sections', indexLabel: 'Menu sections', reserveBtn: 'Book a table', orderBtn: 'Order delivery',
+        heroTitle: 'The soul of Arequipa in every bite',
+        heroText: 'Dishes from the 8 provinces of Arequipa, signature cocktails and live harp music, in a country house in Yanahuara.',
+        press: 'Recommended by El Comercio and Arequipa travel guides.',
+        illusLabel: 'Illustration of rocoto, chili, garlic, lime and garden leaves', chupeAlt: 'Shrimp chowder served in a clay pot, with whole river shrimp, corn, potato and egg',
+        aboutTitle: 'Cooking with the pride of the farm',
+        about1: 'Our cooking is a tribute to the rich cultural and culinary diversity of our land. Behind every dish there is a province and a producer.',
+        about2: 'For lovers of good food and authentic Arequipa cooking.',
+        mapAlt: 'Map of the Arequipa region in sillar stone with its 8 provinces: La Unión, Caravelí, Condesuyos, Castilla, Caylloma, Camaná, Arequipa and Islay.',
+        mapCaption: '7 days, 8 provinces, one place. Travel across Arequipa without leaving the table.',
+        mapTitle: '7 days, 8 provinces, one place', mapSub: 'Travel across Arequipa without leaving the table. Tap a province to see what it brings to our kitchen.', mapHint: 'Tap the province or its plaque.', provGroup: 'Provinces of Arequipa',
+        onTable: 'At our table:', seeMenu: 'See the menu',
+        vegOnly: 'Vegetarian only', vegLabel: 'Vegetarian', add: 'Add to order', noVeg: 'This section has no vegetarian dishes. Choose another section or turn off the filter.',
+        musicTitle: 'Lunch with live harp music', musicText: 'A garden patio, white sillar stone walls and harp music at the table. When you book, the calendar shows which days have live music.', musicSchedule: '[LIVE MUSIC DAYS AND HOURS]', photoPatio: '[Photo: patio with live harp]',
+        resTitle: 'Book your table', resSub: 'Choose a day, time and party size. We confirm on WhatsApp right away. For groups and events we reply with menu and pairing options.',
+        summaryLabel: 'Your booking', summaryNote: 'We send the confirmation on WhatsApp and a reminder on the day.',
+        typeLabel: 'Booking type', dayLabel: 'Day', timeLabel: 'Time', peopleLabel: 'Guests', less: 'One guest fewer', more: 'One more guest',
+        nameLabel: 'Name', phoneLabel: 'WhatsApp', needData: 'Your name or WhatsApp number is missing. Fill them in to confirm the booking.', submitRes: 'Confirm booking',
+        resDoneTitle: 'Booking confirmed', newRes: 'Make another booking',
+        orderTitle: 'Order straight from our kitchen', orderSub: 'Delivery or pick-up. We message you on WhatsApp when your order leaves the kitchen.',
+        payList: 'Pay with Yape, Plin, Visa or Mastercard.',
+        modeLabel: 'Order type', empty: 'Your order has no dishes yet. Add them from the menu.', goMenu: 'Go to the menu',
+        address: 'Delivery address', zones: 'We deliver to Yanahuara, Cayma, the historic centre and nearby districts. [ZONES AND FEES]',
+        pickupNote: 'Pick it up at Calle La Recoleta 220, Yanahuara. We will let you know when it is ready.',
+        payLabel: 'Payment method', totalNote: 'The amount is calculated from menu prices.', sendOrder: 'Send order',
+        orderDoneTitle: 'Order sent', newOrder: 'Place another order',
+        evTitle: 'A long table to celebrate', evText: 'Company lunches, family celebrations and tour groups, with tailored menus and pairings.', evCta: 'Request an event quote',
+        visitTitle: 'Visit us', hours: '[OPENING HOURS]', directions: 'Get directions', mapPh: '[Google Map: Calle La Recoleta 220, Yanahuara]',
+        footerPhrase: 'Thank you for joining us on this journey of flavours and traditions.'
+      }
+    };
+    var t = T[s.lang];
+    var L = function (es, enT) { return en ? enT : es; };
+
+    var langs = [{ id: 'es', label: 'Español', code: 'es' }, { id: 'en', label: 'English', code: 'en' }].map(function (l) {
+      return { label: l.label, code: l.code, on: s.lang === l.id, off: s.lang !== l.id, pick: function () { self.setState({ lang: l.id }); } };
+    });
+    var nav = [
+      { href: '#carta', label: L('Carta', 'Menu') },
+      { href: '#provincias', label: L('Provincias', 'Provinces') },
+      { href: '#reservas', label: L('Reservas', 'Bookings') },
+      { href: '#pedidos', label: L('Pedidos', 'Order') },
+      { href: '#eventos', label: L('Eventos', 'Events') },
+      { href: '#visitanos', label: L('Cómo llegar', 'Find us') }
+    ];
+    var PH = L('[PLATO O PRODUCTO DE LA CASA]', '[HOUSE DISH OR PRODUCE]');
+    var provDefs = [
+      { id: 'launion', name: 'La Unión', x: 53.9, y: 14.8, place: L('Cotahuasi', 'Cotahuasi'),
+        text: L('La provincia más alta y apartada, con el cañón de Cotahuasi y sus pueblos de altura.', 'The highest and most remote province, home to the Cotahuasi canyon and its highland villages.'),
+        prod: L('Queso de Cotahuasi.', 'Cheese from Cotahuasi.') },
+      { id: 'caraveli', name: 'Caravelí', x: 27.0, y: 36.6, place: L('Costa norte, Chala', 'Northern coast, Chala'),
+        text: L('La costa norte de la región, entre el desierto y el mar.', 'The region’s northern coast, between desert and sea.'), prod: PH },
+      { id: 'condesuyos', name: 'Condesuyos', x: 48.9, y: 39.2, place: 'Chuquibamba',
+        text: L('Valles de sierra con capital en Chuquibamba.', 'Highland valleys with Chuquibamba as its capital.'), prod: PH },
+      { id: 'castilla', name: 'Castilla', x: 63.5, y: 33.8, place: L('Aplao, Valle de Majes', 'Aplao, Majes Valley'),
+        text: L('El Valle de Majes y su río, tierra de camarón.', 'The Majes Valley and its river, the land of river shrimp.'),
+        prod: L('Camarón del Valle de Majes, la base de nuestro chupe.', 'River shrimp from the Majes Valley, the heart of our chowder.'), dish: 'chupe', dishName: 'CHUPE DE CAMARÓN' },
+      { id: 'caylloma', name: 'Caylloma', x: 82.9, y: 36.2, place: L('Valle del Colca', 'Colca Valley'),
+        text: L('El Valle del Colca, sus andenes y sus pueblos.', 'The Colca Valley, its terraces and villages.'), prod: PH },
+      { id: 'camana', name: 'Camaná', x: 47.4, y: 59.6, place: L('Costa y valle de Camaná', 'Camaná coast and valley'),
+        text: L('Valle costero y playas del sur de la región.', 'A coastal valley and the beaches of the south.'), prod: PH },
+      { id: 'arequipa', name: 'Arequipa', x: 78.8, y: 59.4, place: L('La ciudad y su campiña', 'The city and its countryside'),
+        text: L('La ciudad blanca y su campiña, cuna de la picantería.', 'The white city and its countryside, birthplace of the picantería.'),
+        prod: L('Ocopa, rocoto relleno y pastel de papa.', 'Ocopa, stuffed rocoto and potato bake.'), dish: 'rocoto', dishName: 'ROCOTO RELLENO TRADICIONAL' },
+      { id: 'islay', name: 'Islay', x: 72.1, y: 78.6, place: 'Mollendo, Matarani',
+        text: L('El puerto y el mar de Arequipa.', 'Arequipa’s port and sea.'),
+        prod: L('Pesca del día de Matarani.', 'Catch of the day from Matarani.') }
+    ];
+    var MAPD = {"caraveli": "M600 320 L588 319 L579 313 L570 307 L560 299 L550 304 L540 304 L530 301 L520 296 L510 298 L500 300 L490 297 L480 293 L469 291 L460 299 L450 300 L440 300 L429 298 L422 306 L417 314 L411 321 L401 325 L396 332 L393 341 L388 350 L382 356 L373 361 L370 370 L363 363 L355 356 L354 344 L348 336 L340 329 L331 336 L320 337 L308 337 L299 345 L294 338 L288 331 L286 322 L282 314 L274 308 L269 301 L264 293 L264 281 L256 275 L249 268 L241 262 L241 251 L236 243 L230 233 L219 238 L210 231 L200 227 L191 224 L180 228 L170 225 L160 220 L149 220 L140 226 L131 231 L120 229 L108 231 L103 239 L101 250 L92 255 L84 260 L75 267 L79 279 L74 290 L70 300 L68 311 L78 317 L80 327 L84 335 L81 348 L91 354 L98 362 L106 369 L107 383 L116 387 L124 393 L134 396 L136 408 L142 415 L148 423 L160 423 L166 431 L173 437 L178 446 L191 445 L198 451 L206 456 L209 468 L220 471 L228 475 L238 477 L243 487 L251 491 L259 496 L271 496 L277 504 L283 511 L290 519 L300 519 L310 523 L318 528 L325 537 L336 538 L345 540 L355 543 L361 554 L371 556 L380 560 L390 563 L392 575 L398 582 L404 589 L416 591 L422 598 L427 607 L431 615 L440 620 L449 623 L455 630 L462 636 L468 643 L479 643 L486 648 L494 653 L498 665 L508 666 L517 669 L528 668 L534 678 L543 682 L551 687 L560 690 L563 681 L564 672 L563 662 L568 654 L570 645 L575 637 L573 627 L576 618 L577 609 L582 600 L582 591 L584 582 L586 573 L591 565 L595 557 L595 548 L596 538 L600 530 L604 521 L603 512 L602 503 L601 494 L606 485 L607 476 L609 467 L606 458 L608 449 L610 440 L615 431 L613 420 L616 410 L619 400 L625 391 L624 380 L621 372 L616 364 L617 353 L612 345 L608 337 L601 330 L600 320Z", "launion": "M915 160 L910 170 L901 174 L898 165 L891 158 L883 151 L882 141 L881 131 L878 122 L870 116 L860 114 L850 108 L841 104 L830 104 L821 112 L809 111 L799 114 L789 118 L782 128 L769 126 L759 129 L749 134 L741 142 L732 145 L723 147 L714 150 L708 159 L699 163 L691 165 L682 172 L684 182 L683 191 L685 202 L674 208 L671 218 L666 226 L668 238 L659 245 L654 253 L648 261 L651 273 L645 281 L640 290 L629 292 L625 304 L618 310 L610 316 L600 320 L606 327 L609 336 L617 342 L624 348 L630 354 L634 363 L640 372 L650 368 L660 365 L670 365 L680 365 L690 363 L699 359 L708 355 L717 352 L727 349 L734 342 L742 337 L751 333 L761 332 L769 327 L777 321 L785 316 L795 314 L804 310 L811 304 L818 298 L825 292 L834 288 L841 281 L847 273 L852 265 L861 261 L867 254 L874 248 L880 240 L883 229 L891 220 L896 211 L897 199 L903 190 L907 180 L913 171 L915 160Z", "condesuyos": "M600 320 L601 330 L608 337 L612 345 L617 353 L616 364 L621 372 L624 380 L625 391 L619 400 L616 410 L613 420 L615 431 L610 440 L608 449 L606 458 L609 467 L607 476 L606 485 L601 494 L602 503 L603 512 L604 521 L600 530 L609 534 L616 542 L624 546 L634 550 L643 553 L650 560 L659 563 L667 567 L677 566 L685 570 L694 572 L702 578 L712 577 L721 579 L729 584 L735 594 L743 599 L752 605 L760 610 L765 602 L770 594 L776 588 L784 582 L791 576 L794 567 L799 559 L804 551 L812 544 L815 535 L819 526 L823 517 L831 511 L826 502 L822 494 L813 489 L809 480 L805 473 L802 463 L795 458 L789 450 L790 440 L796 430 L796 420 L796 410 L796 400 L801 390 L805 381 L810 373 L812 362 L820 355 L826 347 L831 338 L833 327 L840 320 L845 312 L851 303 L852 293 L857 284 L862 276 L869 268 L871 258 L874 248 L880 240 L874 248 L867 254 L861 261 L852 265 L847 273 L841 281 L834 288 L825 292 L818 298 L811 304 L804 310 L795 314 L785 316 L777 321 L769 327 L761 332 L751 333 L742 337 L734 342 L727 349 L717 352 L708 355 L699 359 L690 363 L680 365 L670 365 L660 365 L650 368 L640 372 L634 363 L630 354 L624 348 L617 342 L609 336 L606 327 L600 320Z", "castilla": "M915 160 L913 171 L907 180 L903 190 L897 199 L896 211 L891 220 L883 229 L880 240 L874 248 L871 258 L869 268 L862 276 L857 284 L852 293 L851 303 L845 312 L840 320 L833 327 L831 338 L826 347 L820 355 L812 362 L810 373 L805 381 L801 390 L796 400 L796 410 L796 420 L796 430 L790 440 L789 450 L795 458 L802 463 L805 473 L809 480 L813 489 L822 494 L826 502 L831 511 L823 517 L819 526 L815 535 L812 544 L804 551 L799 559 L794 567 L791 576 L784 582 L776 588 L770 594 L765 602 L760 610 L764 618 L764 628 L767 636 L769 645 L775 653 L775 662 L778 671 L779 683 L790 684 L800 688 L810 691 L819 699 L830 701 L840 699 L850 699 L860 701 L870 701 L880 698 L890 700 L896 692 L900 683 L904 675 L904 664 L911 657 L916 649 L922 641 L923 631 L928 623 L932 614 L940 607 L942 597 L945 588 L950 580 L944 572 L941 563 L939 554 L934 545 L927 538 L924 529 L921 520 L924 510 L925 500 L926 490 L930 481 L939 477 L947 472 L955 465 L964 462 L973 460 L982 456 L990 450 L990 440 L993 430 L997 420 L996 410 L996 400 L997 390 L1002 380 L1001 370 L1002 360 L1001 350 L1007 340 L1007 330 L1008 320 L1006 310 L1011 300 L1013 291 L1016 282 L1013 272 L1016 263 L1018 254 L1023 246 L1022 236 L1024 227 L1025 218 L1030 209 L1032 200 L1032 190 L1031 179 L1036 170 L1039 160 L1040 150 L1042 139 L1035 129 L1040 118 L1033 107 L1023 100 L1016 110 L1009 119 L1000 124 L994 134 L986 138 L978 143 L966 141 L960 150 L951 153 L943 160 L933 154 L924 156 L915 160Z", "caylloma": "M950 580 L959 583 L966 592 L975 595 L984 599 L993 603 L1001 612 L1008 606 L1016 602 L1021 593 L1029 589 L1037 585 L1046 582 L1053 575 L1059 569 L1070 565 L1081 563 L1090 555 L1100 550 L1109 549 L1118 553 L1127 551 L1136 550 L1145 547 L1155 550 L1164 552 L1173 552 L1182 549 L1191 547 L1200 550 L1210 552 L1220 553 L1230 552 L1240 554 L1250 558 L1260 559 L1270 558 L1280 558 L1289 559 L1298 558 L1307 554 L1316 550 L1325 548 L1334 550 L1343 548 L1352 545 L1360 539 L1370 540 L1363 533 L1355 526 L1354 514 L1347 507 L1339 500 L1333 491 L1335 480 L1335 469 L1329 460 L1327 450 L1329 440 L1335 430 L1333 420 L1331 410 L1329 401 L1334 389 L1329 379 L1326 370 L1318 361 L1323 348 L1316 341 L1312 332 L1300 328 L1299 317 L1295 308 L1294 299 L1285 291 L1286 280 L1285 270 L1289 259 L1282 251 L1271 248 L1261 244 L1252 237 L1241 237 L1230 236 L1223 229 L1216 222 L1208 217 L1197 217 L1192 213 L1182 215 L1172 217 L1165 224 L1158 232 L1149 236 L1142 238 L1136 231 L1125 228 L1118 222 L1112 215 L1109 204 L1101 200 L1094 192 L1087 186 L1088 174 L1082 167 L1076 159 L1070 158 L1060 152 L1050 150 L1040 150 L1039 160 L1036 170 L1031 179 L1032 190 L1032 200 L1030 209 L1025 218 L1024 227 L1022 236 L1023 246 L1018 254 L1016 263 L1013 272 L1016 282 L1013 291 L1011 300 L1006 310 L1008 320 L1007 330 L1007 340 L1001 350 L1002 360 L1001 370 L1002 380 L997 390 L996 400 L996 410 L997 420 L993 430 L990 440 L990 450 L982 456 L973 460 L964 462 L955 465 L947 472 L939 477 L930 481 L926 490 L925 500 L924 510 L921 520 L924 529 L927 538 L934 545 L939 554 L941 563 L944 572 L950 580Z", "camana": "M600 530 L596 538 L595 548 L595 557 L591 565 L586 573 L584 582 L582 591 L582 600 L577 609 L576 618 L573 627 L575 637 L570 645 L568 654 L563 662 L564 672 L563 681 L560 690 L565 700 L576 702 L585 707 L592 713 L598 724 L608 725 L617 727 L626 731 L631 740 L638 747 L647 750 L657 752 L665 756 L671 765 L680 769 L689 771 L699 770 L705 780 L714 784 L721 789 L733 785 L741 790 L750 794 L755 804 L766 804 L775 808 L784 811 L789 822 L798 823 L806 830 L816 833 L819 844 L824 852 L829 860 L840 863 L845 872 L849 881 L854 891 L866 894 L873 902 L880 910 L880 900 L877 890 L879 880 L881 870 L884 860 L881 849 L886 840 L888 830 L890 820 L892 810 L893 800 L892 790 L897 780 L900 770 L900 760 L896 750 L896 740 L897 730 L894 720 L891 710 L890 700 L880 698 L870 701 L860 701 L850 699 L840 699 L830 701 L819 699 L810 691 L800 688 L790 684 L779 683 L778 671 L775 662 L775 653 L769 645 L767 636 L764 628 L764 618 L760 610 L752 605 L743 599 L735 594 L729 584 L721 579 L712 577 L702 578 L694 572 L685 570 L677 566 L667 567 L659 563 L650 560 L643 553 L634 550 L624 546 L616 542 L609 534 L600 530Z", "arequipa": "M950 580 L945 588 L942 597 L940 607 L932 614 L928 623 L923 631 L922 641 L916 649 L911 657 L904 664 L904 675 L900 683 L896 692 L890 700 L891 710 L894 720 L897 730 L896 740 L896 750 L900 760 L900 770 L897 780 L892 790 L893 800 L892 810 L890 820 L899 818 L907 814 L915 809 L925 809 L933 807 L942 805 L949 798 L960 795 L970 792 L981 790 L990 783 L1000 778 L1010 782 L1020 785 L1030 785 L1040 784 L1050 788 L1060 791 L1070 791 L1080 787 L1090 790 L1100 790 L1110 793 L1120 789 L1130 790 L1139 784 L1150 785 L1160 783 L1171 784 L1178 774 L1187 773 L1196 772 L1207 775 L1215 771 L1223 765 L1232 762 L1241 762 L1251 763 L1260 755 L1268 748 L1280 748 L1290 745 L1301 741 L1305 731 L1315 730 L1323 726 L1332 723 L1337 715 L1343 706 L1352 704 L1361 700 L1368 693 L1365 682 L1368 674 L1369 664 L1379 658 L1379 649 L1383 640 L1377 630 L1384 620 L1383 610 L1384 600 L1376 590 L1381 580 L1379 570 L1379 559 L1368 551 L1370 540 L1360 539 L1352 545 L1343 548 L1334 550 L1325 548 L1316 550 L1307 554 L1298 558 L1289 559 L1280 558 L1270 558 L1260 559 L1250 558 L1240 554 L1230 552 L1220 553 L1210 552 L1200 550 L1191 547 L1182 549 L1173 552 L1164 552 L1155 550 L1145 547 L1136 550 L1127 551 L1118 553 L1109 549 L1100 550 L1090 555 L1081 563 L1070 565 L1059 569 L1053 575 L1046 582 L1037 585 L1029 589 L1021 593 L1016 602 L1008 606 L1001 612 L993 603 L984 599 L975 595 L966 592 L959 583 L950 580Z", "islay": "M890 820 L888 830 L886 840 L881 849 L884 860 L881 870 L879 880 L877 890 L880 900 L880 910 L887 918 L897 919 L907 921 L914 928 L920 937 L929 942 L939 941 L948 944 L956 948 L964 955 L974 953 L983 955 L993 955 L998 965 L1006 970 L1012 976 L1025 977 L1029 986 L1036 993 L1040 1002 L1052 1003 L1056 1012 L1061 1020 L1062 1030 L1068 1036 L1077 1041 L1078 1048 L1086 1043 L1097 1041 L1100 1032 L1105 1024 L1107 1015 L1119 1011 L1123 1002 L1130 995 L1130 983 L1140 978 L1146 971 L1155 964 L1152 952 L1156 944 L1160 936 L1169 930 L1170 920 L1169 910 L1167 900 L1175 890 L1174 880 L1173 870 L1168 861 L1170 851 L1167 843 L1165 834 L1156 827 L1154 818 L1154 808 L1152 797 L1140 794 L1130 790 L1120 789 L1110 793 L1100 790 L1090 790 L1080 787 L1070 791 L1060 791 L1050 788 L1040 784 L1030 785 L1020 785 L1010 782 L1000 778 L990 783 L981 790 L970 792 L960 795 L949 798 L942 805 L933 807 L925 809 L915 809 L907 814 L899 818 L890 820Z"};
+    var plaqueBase = 'position: absolute; transform: translate(-50%, -50%); display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 4px 12px; border-radius: 3px; white-space: nowrap; font-family: \'Cormorant Garamond\', Garamond, Georgia, serif; font-size: clamp(11px, 1.15vw, 17px); font-weight: 700; letter-spacing: 0.06em; ';
+    var provincias = provDefs.map(function (p) {
+      var pos = 'left: ' + p.x + '%; top: ' + p.y + '%; ';
+      return {
+        name: p.name, upper: p.name.toUpperCase(), on: s.prov === p.id, off: s.prov !== p.id,
+        plaqueOn: plaqueBase + pos + 'margin-top: -8px; border: 1px solid #5c3716; background: #8a5528; color: #ffffff; box-shadow: 0 3px 0 #5c3716, 0 0 0 3px #da2785',
+        plaqueOff: plaqueBase + pos + 'border: 1px solid #8a5528; background: #c98c50; color: #2a1608; box-shadow: 0 3px 0 #8a5528',
+        pick: function () { self.setState({ prov: p.id, provAdded: false }); }
+      };
+    });
+    var mp = {};
+    provDefs.forEach(function (p) {
+      var on = s.prov === p.id;
+      mp[p.id] = { fill: on ? '#fbf7f0' : '#ece5d8', tr: on ? 'translate(0,-8)' : 'translate(0,0)', pick: function () { self.setState({ prov: p.id, provAdded: false }); } };
+    });
+    var pSel = provDefs.filter(function (p) { return p.id === s.prov; })[0] || provDefs[3];
+    var prov = {
+      name: pSel.name, place: pSel.place, text: pSel.text, prod: pSel.prod,
+      hasDish: !!pSel.dish, dishLabel: L('Agregar ', 'Add ') + (pSel.dishName || '') + L(' al pedido', ' to order'),
+      addDish: function () { if (pSel.dish) { var c = Object.assign({}, self.state.cart); c[pSel.dish] = (c[pSel.dish] || 0) + 1; self.setState({ cart: c, provAdded: true, orderDone: false }); } },
+      added: s.provAdded, addedText: (pSel.dishName || '') + L(' está en su pedido.', ' is in your order.'),
+      goCarta: function () { self.setState({ cat: 'picanteria' }); }
+    };
+
+    var catDefs = [
+      { id: 'picanteria', es: 'Picantería', en: 'Picantería', color: '#e84643', fg: '#ffffff',
+        hintEs: 'Ocopa, chupe de camarón, rocoto relleno', hintEn: 'Ocopa, shrimp chowder, stuffed rocoto',
+        introEs: 'Los clásicos de las picanterías de Arequipa, con producto de sus provincias.', introEn: 'The classics of Arequipa picanterías, made with produce from its provinces.' },
+      { id: 'autor', es: 'Cocina de autor', en: 'Signature cuisine', color: '#da2785', fg: '#ffffff',
+        hintEs: 'Producto arequipeño, mirada propia', hintEn: 'Arequipa produce, our own take',
+        introEs: 'La despensa arequipeña vista por nuestra cocina.', introEn: 'The Arequipa pantry, seen through our kitchen.' },
+      { id: 'cocteleria', es: 'Coctelería', en: 'Cocktails', color: '#85a890', fg: '#1d1d1b',
+        hintEs: 'Pisco, rocoto, tuna roja', hintEn: 'Pisco, rocoto, red prickly pear',
+        introEs: 'Cocteles de la Huerta con pisco y frutas de la región.', introEn: 'House cocktails with pisco and regional fruit.' },
+      { id: 'maridajes', es: 'Maridajes', en: 'Pairings', color: '#3d792f', fg: '#ffffff',
+        hintEs: 'Una bebida pensada para cada plato', hintEn: 'A drink chosen for every dish',
+        introEs: 'Nuestro bar sugiere la bebida para cada plato.', introEn: 'Our bar suggests a drink for every dish.' }
+    ];
+    var curCat = catDefs.filter(function (c) { return c.id === s.cat; })[0];
+    var heroBands = catDefs.map(function (c, i) {
+      return {
+        label: en ? c.en : c.es, hint: en ? c.hintEn : c.hintEs,
+        style: 'display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; min-height: 92px; padding: 18px clamp(24px, 5vw, 72px) 18px 32px; box-sizing: border-box; text-decoration: none; background: ' + c.color + '; color: ' + c.fg + '; margin-left: ' + (i * 28) + 'px; animation-delay: ' + (120 + i * 110) + 'ms',
+        pick: function () { self.setState({ cat: c.id }); }
+      };
+    });
+    var cats = catDefs.map(function (c) {
+      var base = 'min-height: 44px; padding: 0 2px; border: 0; background: transparent; font-family: \'Cormorant Garamond\', Garamond, Georgia, serif; font-size: 24px; font-weight: 700; ';
+      return {
+        label: en ? c.en : c.es, on: s.cat === c.id, off: s.cat !== c.id,
+        onStyle: base + 'color: #1d1d1b; box-shadow: inset 0 -4px 0 ' + c.color,
+        offStyle: base + 'color: #475a29',
+        pick: function () { self.setState({ cat: c.id }); }
+      };
+    });
+    var P = 'S/ [PRECIO]';
+    var menu = [
+      { id: 'ocopa', cat: 'picanteria', veg: true, name: 'OCOPA AREQUIPEÑA', es: 'Salsa a base de ají mirasol salteado con cebolla y ajo arequipeño.', en: 'Ají mirasol sauce sautéed with onion and Arequipa garlic.' },
+      { id: 'chupe', cat: 'picanteria', photo: 'img/chupe-de-camaron.jpg', name: 'CHUPE DE CAMARÓN', noteEs: 'Plato bandera de la casa', noteEn: 'House signature dish', es: 'Camarón del Valle de Majes.', en: 'River shrimp chowder with shrimp from the Majes Valley.' },
+      { id: 'queso', cat: 'picanteria', veg: true, photo: 'img/queso-al-horno.jpg', name: 'QUESO AL HORNO', es: 'Queso horneado hasta dorar, con su salsa y guarnición de la casa.', en: 'Cheese baked until golden, with house sauce and sides.' },
+      { id: 'rocoto', cat: 'picanteria', name: 'ROCOTO RELLENO TRADICIONAL', es: 'Rocoto arequipeño relleno según la receta de la casa.', en: 'Arequipa rocoto pepper, stuffed to the house recipe.' },
+      { id: 'pastel', cat: 'picanteria', veg: true, name: 'PASTEL DE PAPA ESPECIAL', es: 'Capas de papa, queso y leche, horneadas.', en: 'Baked layers of potato, cheese and milk.' },
+      { id: 'torrejitas', cat: 'picanteria', veg: true, name: 'TORREJITAS DE LA HUERTA', es: 'Torrejitas de verduras de la huerta.', en: 'Garden vegetable fritters.' },
+      { id: 'doble', cat: 'picanteria', name: 'DOBLE AREQUIPEÑO', es: 'Dos clásicos de la picantería en un solo plato.', en: 'Two picantería classics on one plate.' },
+      { id: 'autor1', cat: 'autor', name: '[PLATO DE AUTOR]', es: 'Ingredientes y origen, a definir con el chef.', en: 'Ingredients and origin, to be defined with the chef.' },
+      { id: 'autor2', cat: 'autor', name: '[PLATO DE AUTOR]', es: 'Ingredientes y origen, a definir con el chef.', en: 'Ingredients and origin, to be defined with the chef.' },
+      { id: 'autor3', cat: 'autor', veg: true, name: '[PLATO DE AUTOR]', es: 'Ingredientes y origen, a definir con el chef.', en: 'Ingredients and origin, to be defined with the chef.' },
+      { id: 'autor4', cat: 'autor', name: '[PLATO DE AUTOR]', es: 'Ingredientes y origen, a definir con el chef.', en: 'Ingredients and origin, to be defined with the chef.' },
+      { id: 'coctel1', cat: 'cocteleria', veg: true, name: '[COCTEL DE LA HUERTA]', es: '(Pisco acholado, rocoto, tuna roja, limón…)', en: '(Acholado pisco, rocoto, red prickly pear, lime…)' },
+      { id: 'coctel2', cat: 'cocteleria', veg: true, name: '[COCTEL DE AUTOR]', es: '(Ingredientes a definir con el bar)', en: '(Ingredients to be defined with the bar)' },
+      { id: 'coctel3', cat: 'cocteleria', veg: true, name: '[REFRESCO DE LA CASA]', es: '(Ingredientes a definir con el bar)', en: '(Ingredients to be defined with the bar)', price: 'Vaso S/ [PRECIO] | Jarra S/ [PRECIO]' },
+      { id: 'coctel4', cat: 'cocteleria', veg: true, name: '[COCTEL SIN ALCOHOL]', es: '(Ingredientes a definir con el bar)', en: '(Ingredients to be defined with the bar)' },
+      { id: 'mar1', cat: 'maridajes', name: 'CHUPE DE CAMARÓN + [COCTEL]', es: 'Sugerencia del bar para el plato bandera.', en: 'Our bar’s pick for the signature dish.' },
+      { id: 'mar2', cat: 'maridajes', name: 'ROCOTO RELLENO + [BEBIDA]', es: 'Sugerencia del bar para equilibrar el picante.', en: 'Our bar’s pick to balance the heat.' }
+    ];
+    var byId = {};
+    menu.forEach(function (d) { byId[d.id] = d; });
+    var setQty = function (id, delta) {
+      var c = Object.assign({}, self.state.cart);
+      var q = (c[id] || 0) + delta;
+      if (q <= 0) delete c[id]; else c[id] = q;
+      self.setState({ cart: c, orderDone: false });
+    };
+    var dishes = menu.filter(function (d) { return d.cat === s.cat && (!s.veg || d.veg); }).map(function (d) {
+      var q = s.cart[d.id] || 0;
+      return {
+        name: d.name, desc: en ? d.en : d.es, price: d.price || P, veg: !!d.veg,
+        hasPhoto: !!d.photo, photo: d.photo || '', photoAlt: d.name.charAt(0) + d.name.slice(1).toLowerCase(),
+        hasNote: !!d.noteEs, note: en ? d.noteEn : d.noteEs,
+        inCart: q > 0, notInCart: q === 0, qtyLabel: q + ' ' + L('en el pedido', 'in order'),
+        inc: function () { setQty(d.id, 1); }, dec: function () { setQty(d.id, -1); },
+        addLabel: L('Agregar al pedido: ', 'Add to order: ') + d.name,
+        incLabel: L('Agregar uno: ', 'Add one: ') + d.name, decLabel: L('Quitar uno: ', 'Remove one: ') + d.name
+      };
+    });
+    var cartIds = Object.keys(s.cart);
+    var cartCount = cartIds.reduce(function (a, k) { return a + s.cart[k]; }, 0);
+    var cartItems = cartIds.map(function (id) {
+      var d = byId[id];
+      return {
+        name: d.name, qty: s.cart[id], price: d.price || P,
+        inc: function () { setQty(id, 1); }, dec: function () { setQty(id, -1); },
+        incLabel: L('Agregar uno: ', 'Add one: ') + d.name, decLabel: L('Quitar uno: ', 'Remove one: ') + d.name
+      };
+    });
+    var platos = function (n) { return n + ' ' + (n === 1 ? L('plato', 'dish') : L('platos', 'dishes')); };
+
+    var tipoDefs = [{ id: 'mesa', es: 'Mesa', en: 'Table' }, { id: 'grupo', es: 'Grupo de 8 a más', en: 'Group of 8 or more' }, { id: 'evento', es: 'Evento corporativo', en: 'Corporate event' }];
+    var tipos = tipoDefs.map(function (x) {
+      return { label: en ? x.en : x.es, on: s.tipo === x.id, off: s.tipo !== x.id, pick: function () { self.setState({ tipo: x.id, personas: x.id === 'mesa' ? Math.min(self.state.personas, 7) : Math.max(self.state.personas, x.id === 'grupo' ? 8 : 15) }); } };
+    });
+    var loc = en ? 'en-GB' : 'es-PE';
+    var today = new Date();
+    var dayObjs = [];
+    for (var i = 0; i < 7; i++) { dayObjs.push(new Date(today.getFullYear(), today.getMonth(), today.getDate() + i)); }
+    var cap = function (x) { return x.charAt(0).toUpperCase() + x.slice(1); };
+    var days = dayObjs.map(function (dt, i) {
+      var wd = i === 0 ? L('Hoy', 'Today') : cap(dt.toLocaleDateString(loc, { weekday: 'short' }).replace('.', ''));
+      return { wd: wd, num: dt.getDate(), aria: dt.toLocaleDateString(loc, { weekday: 'long', day: 'numeric', month: 'long' }), on: s.day === i, off: s.day !== i, pick: function () { self.setState({ day: i }); } };
+    });
+    var horaList = ['12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '19:30'];
+    var horas = horaList.map(function (h) { return { label: h, on: s.hora === h, off: s.hora !== h, pick: function () { self.setState({ hora: h }); } }; });
+    var dayLong = dayObjs[s.day].toLocaleDateString(loc, { weekday: 'long', day: 'numeric', month: 'long' });
+    var tipoSel = tipoDefs.filter(function (x) { return x.id === s.tipo; })[0] || tipoDefs[0];
+    var sumLine = (en ? tipoSel.en : tipoSel.es) + L(' para ', ' for ') + s.personas + ' ' + (s.personas === 1 ? L('persona', 'guest') : L('personas', 'guests'));
+    var nombre1 = (s.nombre || '').trim().split(' ')[0];
+    var resDoneText = s.tipo === 'mesa'
+      ? L(nombre1 + ', su mesa para ' + s.personas + ' está reservada el ' + dayLong + ' a las ' + s.hora + '. Les enviamos la confirmación al WhatsApp ' + s.telefono + '.',
+          nombre1 + ', your table for ' + s.personas + ' is booked for ' + dayLong + ' at ' + s.hora + '. We have sent the confirmation to WhatsApp ' + s.telefono + '.')
+      : L(nombre1 + ', recibimos su solicitud para ' + s.personas + ' personas el ' + dayLong + '. Les escribimos al ' + s.telefono + ' con opciones de menú, maridaje y la cotización.',
+          nombre1 + ', we have your request for ' + s.personas + ' guests on ' + dayLong + '. We will message ' + s.telefono + ' with menu, pairing options and a quote.');
+
+    var modos = [{ id: 'delivery', es: 'Delivery', en: 'Delivery' }, { id: 'recojo', es: 'Recojo en el local', en: 'Pick-up' }].map(function (m) {
+      return { label: en ? m.en : m.es, on: s.modo === m.id, off: s.modo !== m.id, pick: function () { self.setState({ modo: m.id }); } };
+    });
+    var pagos = [{ id: 'yape', label: 'Yape' }, { id: 'plin', label: 'Plin' }, { id: 'tarjeta', label: L('Tarjeta', 'Card') }].map(function (p) {
+      return { label: p.label, on: s.pago === p.id, off: s.pago !== p.id, pick: function () { self.setState({ pago: p.id }); } };
+    });
+    var pagoTxt = s.pago === 'tarjeta' ? L('tarjeta', 'card') : (s.pago === 'yape' ? 'Yape' : 'Plin');
+    var orderDoneText = s.modo === 'delivery'
+      ? L('Su pedido de ' + platos(cartCount) + ' ya está en nuestra cocina. Pago con ' + pagoTxt + '. Les avisamos por WhatsApp cuando salga hacia su dirección.',
+          'Your order of ' + platos(cartCount) + ' is in our kitchen. Paying by ' + pagoTxt + '. We will message you on WhatsApp when it leaves for your address.')
+      : L('Su pedido de ' + platos(cartCount) + ' ya está en nuestra cocina. Pago con ' + pagoTxt + '. Les avisamos cuando esté listo para recoger.',
+          'Your order of ' + platos(cartCount) + ' is in our kitchen. Paying by ' + pagoTxt + '. We will let you know when it is ready to collect.');
+
+    var eventos = [
+      { t: L('Almuerzos de empresa', 'Company lunches'), d: L('Menú cerrado, maridaje y factura para su equipo y sus clientes.', 'Set menu, pairings and invoicing for your team and clients.'), photo: L('[Foto: mesa larga en el patio]', '[Photo: long table on the patio]') },
+      { t: L('Celebraciones', 'Celebrations'), d: L('Cumpleaños, bautizos y reuniones familiares con arpa en vivo.', 'Birthdays, christenings and family gatherings with live harp.'), photo: L('[Foto: celebración familiar]', '[Photo: family celebration]') },
+      { t: L('Grupos de turismo', 'Tour groups'), d: L('Almuerzo arequipeño para agencias y grupos, con carta en inglés.', 'Arequipa lunch for agencies and groups, with an English menu.'), photo: L('[Foto: grupo en el salón]', '[Photo: group in the dining room]') }
+    ];
+
+    return {
+      t: t, langs: langs, nav: nav, provincias: provincias, prov: prov, mp: mp, selD: MAPD[s.prov] || '', heroBands: heroBands,
+      cartLabel: L('Su pedido', 'Your order') + (cartCount ? ' (' + cartCount + ')' : ''),
+      cats: cats, dishes: dishes, noDishes: dishes.length === 0,
+      vegOnly: s.veg, vegAll: !s.veg, toggleVeg: function () { self.setState({ veg: !self.state.veg }); },
+      catTitle: en ? curCat.en : curCat.es, catIntro: en ? curCat.introEn : curCat.introEs,
+      bandStyle: 'flex: 0 1 760px; min-height: 64px; background: ' + curCat.color + '; display: flex; align-items: center; padding: 0 24px 0 clamp(24px, 12%, 200px); box-sizing: border-box',
+      bandTitleStyle: 'margin: 0; font-family: \'Cormorant Garamond\', Garamond, Georgia, serif; font-size: 36px; line-height: 64px; font-weight: 700; letter-spacing: 0.18em; color: ' + curCat.fg,
+      cartCount: cartCount, cartItems: cartItems, cartEmpty: cartCount === 0, cartFull: cartCount > 0,
+      cartSummary: platos(cartCount) + L(' en su pedido', ' in your order'),
+      tipos: tipos, days: days, horas: horas, personas: s.personas,
+      sumDay: cap(dayLong), sumHour: s.hora, sumLine: sumLine,
+      lessP: function () { self.setState({ personas: Math.max(1, self.state.personas - 1) }); },
+      moreP: function () { self.setState({ personas: Math.min(120, self.state.personas + 1) }); },
+      nombre: s.nombre, telefono: s.telefono,
+      onNombre: function (e) { self.setState({ nombre: e.target.value }); },
+      onTelefono: function (e) { self.setState({ telefono: e.target.value }); },
+      resError: s.resError,
+      submitRes: function (e) {
+        if (e && e.preventDefault) e.preventDefault();
+        var st = self.state;
+        if (!st.nombre.trim() || st.telefono.replace(/\D/g, '').length < 6) { self.setState({ resError: true }); return; }
+        self.setState({ resError: false, resDone: true });
+      },
+      resOpen: !s.resDone, resDone: s.resDone, resDoneText: resDoneText,
+      resetRes: function () { self.setState({ resDone: false }); },
+      pickEvento: function () { self.setState({ tipo: 'evento', personas: Math.max(self.state.personas, 15), resDone: false }); },
+      modos: modos, pagos: pagos, isDelivery: s.modo === 'delivery', isPickup: s.modo === 'recojo',
+      direccion: s.direccion, onDireccion: function (e) { self.setState({ direccion: e.target.value }); },
+      sendOrder: function () { self.setState({ orderDone: true }); },
+      orderOpen: !s.orderDone, orderDone: s.orderDone, orderDoneText: orderDoneText,
+      resetOrder: function () { self.setState({ orderDone: false, cart: {} }); },
+      eventos: eventos
+    };
+  }
+}
+</script>
+<noscript><p style="font-family: sans-serif; padding: 24px">La Huerta del Loncco, Calle La Recoleta 220, Yanahuara, Arequipa. Activen JavaScript para ver la carta, reservar y pedir.</p></noscript>
+</body>
+</html>

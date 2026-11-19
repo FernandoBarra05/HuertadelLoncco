@@ -1,0 +1,24 @@
+LA HUERTA DEL LONCCO - WEB
+
+Contenido
+  index.html   La página completa (diseño, textos en español e inglés y funciones).
+  img/         Logo, ilustraciones de fondo y fotos de platos.
+
+Cómo publicarla
+  1. Suban la carpeta completa (index.html + img/) a la raíz de su hosting.
+  2. Mantengan la carpeta img/ junto a index.html: las imágenes se cargan con rutas relativas (img/...).
+  3. Para verla en su computadora, basta con abrir index.html en el navegador.
+
+Cambiar una imagen
+  Reemplacen el archivo dentro de img/ con otro del mismo nombre
+  (por ejemplo, img/logo-blanco.png por el logo original en alta calidad).
+
+Pendiente antes de publicar
+  - Precios: aparecen como "S/ [PRECIO]".
+  - Horario, número de WhatsApp, días de música en vivo y zonas de reparto.
+  - Platos de autor, cocteles y maridajes marcados entre corchetes.
+  - Las reservas y los pedidos muestran la confirmación en pantalla, pero todavía
+    no envían nada: falta conectarlos a WhatsApp Business y a la pasarela de pagos
+    (Culqi / Niubiz / Yape / Plin).
+  - Las fuentes (Cormorant Garamond y Roboto) se cargan desde Google Fonts;
+    la página necesita conexión a internet para mostrarlas.

@@ -26,6 +26,22 @@ input{font:inherit}
 .band-link:hover{padding-left:48px !important}
 .prov{transition:fill .2s ease,transform .25s ease}.prov:hover{fill:#f7f2e9}
 .placa:hover{background:#d69a5e !important}
+.burger{display:none}
+.menu-movil{display:none}
+/* Grabados vegetales suaves en todas las secciones, detrás del contenido. */
+#top > header,#top > section,#top > footer{position:relative;isolation:isolate}
+#top > header::before,#top > section::before,#top > footer::before{
+content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+background-image:url('img/grabado-gris.png'),url('img/grabado-gris.png');
+background-repeat:no-repeat;
+background-position:right -160px top 40px,left -220px bottom 40px;
+background-size:clamp(520px,80vw,1000px) auto;
+opacity:.45;
+}
+#top > .osc::before{background-image:url('img/grabado-claro.png'),url('img/grabado-claro.png');opacity:.09}
+@media (max-width:760px){#top > section:not(.osc)::before{opacity:.35}}
+@media (max-width:860px){.nav-desk,.lang-desk{display:none !important}.burger{display:inline-flex !important}.menu-movil{display:flex}}
+@media (max-width:760px){#top section h2:not(#h-carta){font-size:40px !important}.placa,.placa-on{font-size:0 !important;padding:0 !important;gap:0 !important;width:22px;height:22px;min-height:0 !important;border-radius:50% !important}.placa span,.placa-on span{display:none}.placa-on{width:28px;height:28px}}
 @media (prefers-reduced-motion:reduce){.bandIn{animation:none}.band-link,.prov{transition:none}html{scroll-behavior:auto}}
 @media (max-width:760px){.dos-col{background-image:none;grid-template-columns:minmax(0,1fr) !important}.h1{font-size:52px !important}.band-title{font-size:30px !important}}
 </style>
@@ -38,16 +54,15 @@ input{font:inherit}
 
 <!-- ================= PORTADA: el índice de la carta ================= -->
 <header class="osc" style="position: relative; isolation: isolate; overflow: hidden; background: #152808; color: #e9edd9">
-<img src="img/grabado-claro.png" alt="" aria-hidden="true" style="position: absolute; z-index: -1; left: -40px; bottom: -30px; width: min(1100px, 90%); opacity: 0.13; pointer-events: none">
 <div style="padding: 20px clamp(24px, 5vw, 72px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px">
-<a href="#top" style="text-decoration: none; display: flex; align-items: center"><img src="img/logo-blanco.png" alt="La Huerta del Loncco, inicio" style="width: 92px; height: auto; display: block"></a>
-<nav aria-label="{{t.navLabel}}" style="display: flex; flex-wrap: wrap; gap: 0 28px; font-size: 15px">
+<a href="#top" style="text-decoration: none; display: flex; align-items: center"><img src="img/logo-blanco.png" alt="La Huerta del Loncco, inicio" style="width: clamp(120px, 12vw, 160px); height: auto; display: block"></a>
+<nav class="nav-desk" aria-label="{{t.navLabel}}" style="display: flex; flex-wrap: wrap; gap: 0 28px; font-size: 15px">
 <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
 <a href="{{n.href}}" style="color: #e9edd9; text-decoration: none; padding: 12px 0">{{n.label}}</a>
 </sc-for>
 </nav>
 <div style="display: flex; align-items: center; gap: 10px">
-<div role="group" aria-label="Idioma / Language" style="display: flex; border: 1px solid #4a6233; border-radius: 8px; overflow: hidden">
+<div class="lang-desk" role="group" aria-label="Idioma / Language" style="display: flex; border: 1px solid #4a6233; border-radius: 8px; overflow: hidden">
 <sc-for list="{{langs}}" as="l" hint-placeholder-count="2">
 <sc-if value="{{l.on}}" hint-placeholder-val="{{false}}">
 <button type="button" aria-pressed="true" lang="{{l.code}}" onClick="{{l.pick}}" style="min-width: 76px; min-height: 44px; border: 0; background: #bcc785; color: #152808; font-size: 14px; font-weight: 500">{{l.label}}</button>
@@ -58,8 +73,35 @@ input{font:inherit}
 </sc-for>
 </div>
 <a href="#pedidos" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border: 1px solid #4a6233; border-radius: 8px; color: #e9edd9; text-decoration: none; font-size: 14px">{{cartLabel}}</a>
+<button class="burger" type="button" aria-expanded="{{menuExp}}" aria-controls="menu-movil" aria-label="{{menuLabel}}" onClick="{{toggleMenu}}" style="align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 1px solid #4a6233; border-radius: 8px; background: transparent; color: #e9edd9">
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
+<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6 L18 18 M18 6 L6 18"></path></svg>
+</sc-if>
+<sc-if value="{{menuClosed}}" hint-placeholder-val="{{true}}">
+<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7 H20 M4 12 H20 M4 17 H20"></path></svg>
+</sc-if>
+</button>
 </div>
 </div>
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
+<div id="menu-movil" class="menu-movil" style="flex-direction: column; padding: 4px clamp(24px, 5vw, 72px) 28px; border-top: 1px solid #2c4419">
+<nav aria-label="{{t.navLabel}}" style="display: flex; flex-direction: column">
+<sc-for list="{{navM}}" as="n" hint-placeholder-count="6">
+<a href="{{n.href}}" onClick="{{n.close}}" style="display: block; padding: 14px 0; border-bottom: 1px solid #2c4419; color: #e9edd9; text-decoration: none; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 28px; font-weight: 600">{{n.label}}</a>
+</sc-for>
+</nav>
+<div role="group" aria-label="Idioma / Language" style="align-self: flex-start; display: flex; margin-top: 20px; border: 1px solid #4a6233; border-radius: 8px; overflow: hidden">
+<sc-for list="{{langs}}" as="l" hint-placeholder-count="2">
+<sc-if value="{{l.on}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" lang="{{l.code}}" onClick="{{l.pick}}" style="min-width: 96px; min-height: 48px; border: 0; background: #bcc785; color: #152808; font-size: 15px; font-weight: 500">{{l.label}}</button>
+</sc-if>
+<sc-if value="{{l.off}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-pressed="false" lang="{{l.code}}" onClick="{{l.pick}}" style="min-width: 96px; min-height: 48px; border: 0; background: transparent; color: #e9edd9; font-size: 15px">{{l.label}}</button>
+</sc-if>
+</sc-for>
+</div>
+</div>
+</sc-if>
 
 <div style="display: flex; flex-wrap: wrap; align-items: stretch">
 <div style="flex: 1 1 460px; min-width: 0; padding: 72px clamp(24px, 5vw, 72px) 88px; display: flex; flex-direction: column; justify-content: center; gap: 28px; box-sizing: border-box">
@@ -85,7 +127,6 @@ input{font:inherit}
 
 <!-- ================= NOSOTROS ================= -->
 <section id="nosotros" aria-labelledby="h-nos" style="position: relative; isolation: isolate; max-width: 1200px; margin: 0 auto; padding: 120px 24px 96px; display: flex; flex-wrap: wrap; gap: 72px; align-items: center">
-<img class="deco" src="img/grabado-gris.png" alt="" aria-hidden="true" style="position: absolute; z-index: -1; right: -120px; top: 20px; width: 640px; opacity: 0.4; pointer-events: none">
 <div style="flex: 1 1 340px; display: flex; justify-content: center">
 <div style="width: 100%; max-width: 400px; aspect-ratio: 4 / 5; border-radius: 999px 999px 0 0; background: #e9edd9; display: flex; align-items: center; justify-content: center; overflow: hidden">
 <img src="img/chupe-de-camaron.jpg" alt="{{t.chupeAlt}}" style="width: 100%; height: 100%; object-fit: cover; display: block">
@@ -139,7 +180,7 @@ input{font:inherit}
 </svg>
 <sc-for list="{{provincias}}" as="pv" hint-placeholder-count="8">
 <sc-if value="{{pv.on}}" hint-placeholder-val="{{false}}">
-<button type="button" aria-pressed="true" onClick="{{pv.pick}}" style="{{pv.plaqueOn}}"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: #e2c27a"></span>{{pv.upper}}<span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: #e2c27a"></span></button>
+<button class="placa-on" type="button" aria-pressed="true" onClick="{{pv.pick}}" style="{{pv.plaqueOn}}"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: #e2c27a"></span>{{pv.upper}}<span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: #e2c27a"></span></button>
 </sc-if>
 <sc-if value="{{pv.off}}" hint-placeholder-val="{{true}}">
 <button class="placa" type="button" aria-pressed="false" onClick="{{pv.pick}}" style="{{pv.plaqueOff}}"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: #a8813a"></span>{{pv.upper}}<span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: #a8813a"></span></button>
@@ -182,8 +223,6 @@ input{font:inherit}
 
 <!-- ================= CARTA ================= -->
 <section id="carta" aria-labelledby="h-carta" style="position: relative; isolation: isolate; overflow: hidden; padding: 24px 0 120px">
-<img class="deco" src="img/grabado-gris.png" alt="" aria-hidden="true" style="position: absolute; z-index: -1; left: -160px; bottom: 0; width: 760px; opacity: 0.45; transform: scaleX(-1); pointer-events: none">
-<img class="deco" src="img/grabado-gris.png" alt="" aria-hidden="true" style="position: absolute; z-index: -1; right: -200px; top: 120px; width: 620px; opacity: 0.35; pointer-events: none">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-right: 24px; flex-wrap: wrap">
 <div style="{{bandStyle}}">
 <h2 id="h-carta" style="{{bandTitleStyle}}">{{catTitle}}</h2>
@@ -263,7 +302,6 @@ input{font:inherit}
 
 <!-- ================= RESERVAS ================= -->
 <section id="reservas" aria-labelledby="h-res" style="position: relative; isolation: isolate; max-width: 1200px; margin: 0 auto; padding: 120px 24px 56px; display: flex; flex-direction: column; gap: 40px">
-<img class="deco" src="img/grabado-gris.png" alt="" aria-hidden="true" style="position: absolute; z-index: -1; right: -140px; top: 30px; width: 600px; opacity: 0.4; pointer-events: none">
 <div style="display: flex; flex-direction: column; gap: 12px; max-width: 40em">
 <h2 id="h-res" style="margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 56px; line-height: 1; font-weight: 700; color: #475a29">{{t.resTitle}}</h2>
 <p style="margin: 0; font-size: 17px; line-height: 1.7; font-weight: 300">{{t.resSub}}</p>
@@ -501,7 +539,6 @@ input{font:inherit}
 
 <!-- ================= PIE ================= -->
 <footer class="osc" style="position: relative; isolation: isolate; overflow: hidden; background: #152808; color: #e9edd9; padding: 96px clamp(24px, 5vw, 72px) 40px">
-<img src="img/grabado-claro.png" alt="" aria-hidden="true" style="position: absolute; z-index: -1; right: -80px; top: -10px; width: min(1000px, 85%); opacity: 0.1; pointer-events: none">
 <div style="display: flex; flex-direction: column; gap: 56px">
 <img src="img/logo-blanco.png" alt="La Huerta del Loncco" style="width: 150px; height: auto; display: block">
 <p style="margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: 52px; line-height: 1.05; font-weight: 600; color: #bcc785; max-width: 15em; text-wrap: balance">{{t.footerPhrase}}</p>
@@ -612,7 +649,7 @@ class Component extends DCLogic {
   constructor(props) {
     super(props);
     this.state = {
-      lang: 'es', cat: 'picanteria', veg: false, cart: {}, prov: 'castilla', provAdded: false,
+      lang: 'es', cat: 'picanteria', veg: false, cart: {}, prov: 'castilla', provAdded: false, menu: false,
       tipo: 'mesa', day: 0, hora: '13:00', personas: 4, nombre: '', telefono: '', resError: false, resDone: false,
       modo: 'delivery', pago: 'yape', direccion: '', orderDone: false
     };
@@ -873,7 +910,10 @@ class Component extends DCLogic {
     ];
 
     return {
-      t: t, langs: langs, nav: nav, provincias: provincias, prov: prov, mp: mp, selD: MAPD[s.prov] || '', heroBands: heroBands,
+      t: t, langs: langs, nav: nav, provincias: provincias, prov: prov,
+      navM: nav.map(function (n) { return { href: n.href, label: n.label, close: function () { self.setState({ menu: false }); } }; }),
+      menuOpen: s.menu, menuClosed: !s.menu, menuExp: s.menu ? 'true' : 'false', menuLabel: s.menu ? L('Cerrar menú', 'Close menu') : L('Abrir menú', 'Open menu'),
+      toggleMenu: function () { self.setState({ menu: !self.state.menu }); }, mp: mp, selD: MAPD[s.prov] || '', heroBands: heroBands,
       cartLabel: L('Su pedido', 'Your order') + (cartCount ? ' (' + cartCount + ')' : ''),
       cats: cats, dishes: dishes, noDishes: dishes.length === 0,
       vegOnly: s.veg, vegAll: !s.veg, toggleVeg: function () { self.setState({ veg: !self.state.veg }); },
